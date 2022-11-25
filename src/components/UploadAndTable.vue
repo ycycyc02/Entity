@@ -27,8 +27,8 @@
         <template v-if="['data', 'text', 'self_defining_id','entity','entity_kb','segment_id'].includes(column.dataIndex)">
           <div>
             <a-input
-              v-if="editableData[record.self_defining_id]"
-              v-model:value="editableData[record.self_defining_id][column.dataIndex]"
+              v-if="editableData[record.key]"
+              v-model:value="editableData[record.key][column.dataIndex]"
               style="margin: -5px 0"
             />
             <template v-else>
@@ -38,14 +38,14 @@
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="editable-row-operations">
-            <span v-if="editableData[self_defining_id]">
-              <a-typography-link @click="save(record.self_defining_id)">Save</a-typography-link>
-              <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.self_defining_id)">
+            <span v-if="editableData[record.key]">
+              <a-typography-link @click="save(record.key)">Save</a-typography-link>
+              <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
                 <a>Cancel</a>
               </a-popconfirm>
             </span>
             <span v-else>
-              <a @click="edit(record.self_defining_id)">Edit</a>
+              <a @click="edit(record.key)">Edit</a>
             </span>
           </div>
         </template>
@@ -69,6 +69,7 @@
         {
           title: '序号',
           dataIndex: 'self_defining_id',
+          key: 'self_defining_id',
         },
         {
           title: '段编号',
