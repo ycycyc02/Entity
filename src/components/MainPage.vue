@@ -49,22 +49,9 @@
         </div>
       </a-layout-header>
       <a-layout-content>
+        <!-- upload and table -->
         <div :style="{ padding: '24px', background: '#fff', minHeight: '510px' }">
-          <div style="width: 20%; float:left">
-            <UpLoad/>
-          </div>
-          <div style="width: 80%; float:left">
-            <a-table
-              class="table"
-              bordered
-              row-key="key"
-              :columns="uploadColumns"
-              :data-source="uploadData"
-              :pagination="false"
-              :file-list="fileList"
-            >
-            </a-table>
-          </div>
+            <UploadAndTable/>
         </div>
       </a-layout-content>
     </a-layout>
@@ -74,9 +61,8 @@
 import { PieChartOutlined, DesktopOutlined, UserOutlined, TeamOutlined, FileOutlined } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
 import StepCompontent from './StepCompontent.vue'
-import UpLoad from './UpLoad.vue'
-// import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
-// import React, { useState } from 'react';
+import UploadAndTable from './UploadAndTable.vue'
+
 export default defineComponent({
   components: {
     PieChartOutlined,
@@ -85,7 +71,7 @@ export default defineComponent({
     TeamOutlined,
     FileOutlined,
     StepCompontent,
-    UpLoad
+    UploadAndTable
   },
   data() {
     return {
