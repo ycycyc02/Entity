@@ -25,14 +25,14 @@
     >
       <template #bodyCell="{ record , column }">
         <template v-if="column.dataIndex === 'operation'">
+          <a @click="onEdit(record)"><edit-outlined />&nbsp;&nbsp;</a>
           <a-popconfirm
             v-if="dataSource.length"
             title="Sure to delete?"
-            @confirm="onDelete(record.self_defining_id)"
+            @confirm="realDelete(record.self_defining_id)"
           >
-            <a>Delete</a>
+            <a><delete-outlined /></a>
           </a-popconfirm>
-          <a @click="onEdit(record)"> Edit</a>
         </template>
       </template>
     </a-table>
@@ -40,12 +40,15 @@
 </template>
 <script>
   import { message } from 'ant-design-vue';
-  import { UploadOutlined } from '@ant-design/icons-vue';
+  import { UploadOutlined , EditOutlined , DeleteOutlined} from '@ant-design/icons-vue';
   import { defineComponent, ref, inject } from 'vue';
+  import axios from 'axios';
 
   export default defineComponent({
     components: {
       UploadOutlined,
+      EditOutlined,
+      DeleteOutlined
     },
     setup() {
       //表格  
@@ -83,6 +86,16 @@
       ];
       let dataSource = ref([]);
       
+      const realDelete = self_defining_id =>{
+        axios({
+          method: 'post',
+          url: 'http://172.20.137.106:33004/test/deleteSingleTrainingData',
+          data:{
+            auto_increment_id: parseInt(self_defining_id)
+          } 
+        })
+        onDelete(self_defining_id);
+      }
       const onDelete = self_defining_id => {
         dataSource.value = dataSource.value.filter(item => item.self_defining_id !== self_defining_id);
       };
@@ -91,7 +104,6 @@
       const { changeFormState ,changeCurrent } = inject('key')
       const onEdit = record => {
         changeFormState(record);
-        onDelete(record.self_defining_id);
       };
 
       //上传
@@ -103,7 +115,6 @@
           message.success(`${info.file.name} file uploaded successfully`);
           dataSource.value = info.file.response.data
           changeCurrent(1);
-
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} file upload failed.`);
         }
@@ -120,6 +131,7 @@
         dataSource,
         onDelete,
         onEdit,
+        realDelete
       };
     },
     

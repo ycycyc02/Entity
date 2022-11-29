@@ -1,6 +1,6 @@
 <template>
   <!-- 表单 -->
-  <FormModal ref="child"/>
+  <FormModal ref="childForm"/>
   <!-- 主页面 -->
   <a-layout style="min-height: 100vh">
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
@@ -55,7 +55,7 @@
       <a-layout-content>
         <!-- upload and table -->
         <div :style="{ padding: '24px', background: '#fff', minHeight: '510px' }">
-            <UploadAndTable/>
+            <UploadAndTable ref="childTable"/>
         </div>
       </a-layout-content>
     </a-layout>
@@ -79,26 +79,36 @@ export default defineComponent({
   },
   setup() {
     // 表单
-    const child = ref();
+    const childForm = ref();
+    const childTable = ref();
     const current = ref(0);
 
-    const changeFormState = (record) => {
-      child.value.showModal(record)
-    }
-
+    // 步骤条更新
     const changeCurrent = (value) => {
       current.value = value;
     }
 
+    // 表单
+    const changeFormState = (record) => {
+      childForm.value.initForm(record);
+      childForm.value.showModal();
+    }
+    const delteData = (_id) =>{
+      childTable.value.onDelete(_id);
+    }
+
     provide('key',{
-      changeFormState ,changeCurrent
+      changeFormState ,
+      changeCurrent ,
+      delteData
     })
 
     return {
       collapsed: ref(false),
       selectedKeys: ref(['1']),
       current,
-      child
+      childForm,
+      childTable
     };
   }
 });
