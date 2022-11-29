@@ -1,4 +1,7 @@
 <template>
+  <!-- 表单 -->
+  <FormModal ref="child"/>
+  <!-- 主页面 -->
   <a-layout style="min-height: 100vh">
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <div class="logo" />
@@ -40,12 +43,13 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <div style="
-            width: 600px;
-            margin: 0 auto;
-            padding-top: 20px;
-        ">
-          <StepCompontent/>
+        <div style="width: 600px; margin: 0 auto; padding-top: 20px;">
+          <a-steps :current="current" size="small" >
+            <a-step title="上传excel" />
+            <a-step title="修改内容" />
+            <a-step title="知识库查询" />
+            <a-step title="数据集修改" />
+          </a-steps>
         </div>
       </a-layout-header>
       <a-layout-content>
@@ -59,9 +63,9 @@
 </template>
 <script>
 import { PieChartOutlined, DesktopOutlined, UserOutlined, TeamOutlined, FileOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
-import StepCompontent from './StepCompontent.vue'
-import UploadAndTable from './UploadAndTable.vue'
+import { defineComponent, ref, provide } from 'vue';
+import UploadAndTable from './UploadAndTable.vue';
+import FormModal from './FormModal.vue';
 
 export default defineComponent({
   components: {
@@ -70,15 +74,33 @@ export default defineComponent({
     UserOutlined,
     TeamOutlined,
     FileOutlined,
-    StepCompontent,
-    UploadAndTable
+    UploadAndTable,
+    FormModal
   },
-  data() {
+  setup() {
+    // 表单
+    const child = ref();
+    const current = ref(0);
+
+    const changeFormState = (record) => {
+      child.value.showModal(record)
+    }
+
+    const changeCurrent = (value) => {
+      current.value = value;
+    }
+
+    provide('key',{
+      changeFormState ,changeCurrent
+    })
+
     return {
       collapsed: ref(false),
       selectedKeys: ref(['1']),
+      current,
+      child
     };
-  },
+  }
 });
 </script>
 <style>

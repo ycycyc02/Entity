@@ -1,6 +1,6 @@
 <template>
   <!-- 上传 -->
-  <div style="width: 20%; float:left">
+  <div style="width: 20%; float:left; padding-right: 20px">
     <a-upload
       v-model:file-list="fileList"
       name="trainingset"
@@ -23,31 +23,16 @@
       bordered 
       :pagination="{ pageSize: 6 }"
     >
-      <template #bodyCell="{ column, text, record }">
-        <template v-if="['data', 'text', 'self_defining_id','entity','entity_kb','segment_id'].includes(column.dataIndex)">
-          <div>
-            <a-input
-              v-if="editableData[record.key]"
-              v-model:value="editableData[record.key][column.dataIndex]"
-              style="margin: -5px 0"
-            />
-            <template v-else>
-              {{ text }}
-            </template>
-          </div>
-        </template>
-        <template v-else-if="column.dataIndex === 'operation'">
-          <div class="editable-row-operations">
-            <span v-if="editableData[record.key]">
-              <a-typography-link @click="save(record.key)">Save</a-typography-link>
-              <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
-                <a>Cancel</a>
-              </a-popconfirm>
-            </span>
-            <span v-else>
-              <a @click="edit(record.key)">Edit</a>
-            </span>
-          </div>
+      <template #bodyCell="{ record , column }">
+        <template v-if="column.dataIndex === 'operation'">
+          <a-popconfirm
+            v-if="dataSource.length"
+            title="Sure to delete?"
+            @confirm="onDelete(record.self_defining_id)"
+          >
+            <a>Delete</a>
+          </a-popconfirm>
+          <a @click="onEdit(record)"> Edit</a>
         </template>
       </template>
     </a-table>
@@ -55,9 +40,8 @@
 </template>
 <script>
   import { message } from 'ant-design-vue';
-  import { cloneDeep } from 'lodash-es';
   import { UploadOutlined } from '@ant-design/icons-vue';
-  import { defineComponent, ref ,reactive, } from 'vue';
+  import { defineComponent, ref, inject } from 'vue';
 
   export default defineComponent({
     components: {
@@ -98,16 +82,16 @@
         }
       ];
       let dataSource = ref([]);
-      const editableData = reactive({});
-      const edit = key => {
-      editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
+      
+      const onDelete = self_defining_id => {
+        dataSource.value = dataSource.value.filter(item => item.self_defining_id !== self_defining_id);
       };
-      const save = key => {
-        Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
-        delete editableData[key];
-      };
-      const cancel = key => {
-        delete editableData[key];
+      
+      // 弹出表单
+      const { changeFormState ,changeCurrent } = inject('key')
+      const onEdit = record => {
+        changeFormState(record);
+        onDelete(record.self_defining_id);
       };
 
       //上传
@@ -118,6 +102,8 @@
         if (info.file.status === 'done') {
           message.success(`${info.file.name} file uploaded successfully`);
           dataSource.value = info.file.response.data
+          changeCurrent(1);
+
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} file upload failed.`);
         }
@@ -132,11 +118,8 @@
         handleChange,
         columns,
         dataSource,
-        editingKey: '',
-        editableData,
-        edit,
-        save,
-        cancel,
+        onDelete,
+        onEdit,
       };
     },
     
