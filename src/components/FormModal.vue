@@ -80,7 +80,8 @@
     setup() {
 
       // Inject
-      const { delteData } = inject('key');
+      const { updateData } = inject('key');
+      // const { delteData } = inject('key');
 
       // 弹出modal
       let visible = ref(false);
@@ -94,6 +95,7 @@
         formState.entity_kb = record.entity_kb;
         formState.text = record.text;
         formState.data = record.data;
+        // console.log(typeof formState.self_defining_id)
       };
 
       // 表单
@@ -115,8 +117,12 @@
             
         }).then(value=>{
           visible.value = false;
+          console.log(value)
           if(value.data.error_code == 200){
-            delteData(formState.self_defining_id);
+            // delteData(formState.self_defining_id);
+            let OldId = formState.self_defining_id;
+            formState.self_defining_id = value.data.data.min;
+            updateData(formState , OldId);
             console.log('Success:', formState);
           }else{
             console.log('提交失败')

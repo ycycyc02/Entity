@@ -86,19 +86,25 @@
       ];
       let dataSource = ref([]);
       
+      // 数据库中删除
       const realDelete = self_defining_id =>{
         axios({
           method: 'post',
           url: 'http://172.20.137.106:33004/test/deleteSingleTrainingData',
           data:{
-            auto_increment_id: parseInt(self_defining_id)
+            auto_increment_id: self_defining_id
           } 
         })
         onDelete(self_defining_id);
       }
+      // 前端删除
       const onDelete = self_defining_id => {
         dataSource.value = dataSource.value.filter(item => item.self_defining_id !== self_defining_id);
       };
+      // 更新自增id
+      const updateData = (FormState , OldId) => {
+        Object.assign(dataSource.value.filter(item => OldId === item.self_defining_id)[0], FormState);
+      }
       
       // 弹出表单
       const { changeFormState ,changeCurrent } = inject('key')
@@ -131,7 +137,8 @@
         dataSource,
         onDelete,
         onEdit,
-        realDelete
+        realDelete,
+        updateData
       };
     },
     

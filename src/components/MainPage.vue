@@ -96,11 +96,15 @@ export default defineComponent({
     const delteData = (_id) =>{
       childTable.value.onDelete(_id);
     }
+    const updateData = (FormState , OldId) => {
+      childTable.value.updateData(FormState , OldId);
+    }
 
     provide('key',{
       changeFormState ,
       changeCurrent ,
-      delteData
+      delteData,
+      updateData
     })
 
     return {
