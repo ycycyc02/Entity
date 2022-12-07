@@ -80,8 +80,7 @@
     setup() {
 
       // Inject
-      const { updateData } = inject('key');
-      // const { delteData } = inject('key');
+      const { updateData, dataDetName } = inject('dataDetName');
 
       // 弹出modal
       let visible = ref(false);
@@ -107,17 +106,20 @@
         text:'',
         data:''
       });
+      // 提交表单
       const onFinish = () => {
+        // console.log(dataDetName);
         axios({
           method: 'post',
           url: 'http://172.20.137.106:33004/test/saveTrainingSet',
           data:{
-            trainingData: [formState]
+            trainingData: [formState],
+            trainingSetName : dataDetName.value
           }
             
         }).then(value=>{
           visible.value = false;
-          console.log(value)
+          // console.log(value)
           if(value.data.error_code == 200){
             // delteData(formState.self_defining_id);
             let OldId = formState.self_defining_id;
@@ -129,6 +131,7 @@
           } 
         })
       };
+      // 提交失败
       const onFinishFailed = errorInfo => {
         console.log('Canceled:', errorInfo);
         visible.value = false;
@@ -140,7 +143,7 @@
         onFinish,
         onFinishFailed,
         formState,
-        initForm
+        initForm,
       };
     },
   });

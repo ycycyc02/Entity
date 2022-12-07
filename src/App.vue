@@ -1,17 +1,17 @@
 <template>
   <div>
-    <MainPage/>
+    <HomePage/>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import MainPage from "./components/MainPage.vue";
+import HomePage from "./views/HomePage.vue";
 
 export default defineComponent({
   name: 'App',
   components: {
-    MainPage
+    HomePage
   }
 })
 </script>

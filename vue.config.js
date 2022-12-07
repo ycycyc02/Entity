@@ -7,3 +7,9 @@ module.exports = {
   parallel: false,
   publicPath: './',
 }
+module.exports = {
+  devServer: {
+
+      hot: true,//自动保存
+    },
+}
