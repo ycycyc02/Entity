@@ -19,21 +19,8 @@
         
         @click="handleUpload"
       >
-        {{ uploading ? 'Uploading' : 'Start Upload' }}
+        {{ uploading ? '正在上传' : '开始上传' }}
       </a-button>
-      <!-- <a-upload
-        v-model:file-list="fileList"
-        name="trainingset"
-        action="http://172.20.137.106:33004/test/getTable"
-        :headers="headers"
-        @change="handleChange"
-      >
-          导入excel:
-        <a-button>
-          <upload-outlined></upload-outlined>
-          导入数据
-        </a-button>
-      </a-upload> -->
     </div>
 </template>
 <script>
@@ -48,7 +35,7 @@
     },
 
     setup() {
-    const inputValue = ref('test')
+    const inputValue = ref('')
     const fileList = ref([]);
     const uploading = ref(false);
     const dataSource1 = ref([]);
@@ -64,6 +51,10 @@
       return false;
     };
     const handleUpload = () => {
+      if(inputValue.value==''){
+        message.error('请输入数据集名称');
+        return; 
+      }
       const formData = new FormData();
       fileList.value.forEach(file => {
         formData.append('trainingset', file);
@@ -78,13 +69,12 @@
       }).then((res) => {
         fileList.value = [];
         uploading.value = false;
-        inputValue.value = 'test';
-        message.success('upload successfully.');
+        message.success('上传成功');
         dataSource1.value = res.data.data;
         // console.log(dataSource1.value);
       }).catch(() => {
         uploading.value = false;
-        message.error('upload failed.');
+        message.error('上传失败');
       });
     };
     return {

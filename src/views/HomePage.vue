@@ -18,7 +18,7 @@
             <router-link  to="/">数据集上传</router-link>
           </a-menu-item>
           <a-menu-item key="2">
-            <router-link  to="/">数据集管理</router-link>
+            <router-link  to="/manage">数据集管理</router-link>
           </a-menu-item>
         </a-sub-menu>
         <a-menu-item key="3">

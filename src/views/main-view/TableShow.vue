@@ -50,6 +50,11 @@
           dataIndex: 'segment_id',
         },
         {
+          title: '文本',
+          dataIndex: 'text',
+          ellipsis: true,
+        },
+        {
           title: '实体',
           dataIndex: 'entity',
         },
@@ -58,12 +63,7 @@
           dataIndex: 'entity_kb',
         },
         {
-          title: '文本',
-          dataIndex: 'text',
-          ellipsis: true,
-        },
-        {
-          title: '数据',
+          title: '描述信息',
           dataIndex: 'data',
           ellipsis: true,
         },{
