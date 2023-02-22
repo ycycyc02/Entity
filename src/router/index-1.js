@@ -9,15 +9,15 @@ import DataShow from "../views/main-view/DataShow.vue";
 import SearchDataset from "../views/main-view/SearchDataset.vue";
 import SelectDataset from "../views/entity-view/SelectDataset.vue";
 import DatasetPartition from "../views/entity-view/DatasetPartition.vue";
-import SelectKnowledgeBase from "../views/entity-view/SelectKnowledgeBase.vue";
-import SetModel from "../views/entity-view/SetModel.vue";
-import ShowResult from "../views/entity-view/ShowResult.vue";
-import ConfirmParams from "../views/entity-view/ConfirmParams.vue";
-import StartLinking from "../views/linking-view/StartLinking.vue";
-import UseModel from "../views/linking-view/UseModel.vue";
-import SelectModel from "../views/linking-view/SelectModel.vue";
-import ActiveLearning from "../views/study-view/ActiveLearning.vue";
-import GetData from "../views/study-view/GetData.vue";
+const SelectKnowledgeBase =()=>import("../views/entity-view/SelectKnowledgeBase.vue");
+const SetModel =()=>import("../views/entity-view/SetModel.vue");
+const ShowResult = ()=>import("../views/entity-view/ShowResult.vue");
+const ConfirmParams = () => import("../views/entity-view/ConfirmParams.vue");
+const StartLinking = () => import("../views/linking-view/StartLinking.vue");
+const UseModel = () => import("../views/linking-view/UseModel.vue");
+const SelectModel = () => import("../views/linking-view/SelectModel.vue");
+const ActiveLearning = ()=> import("../views/study-view/ActiveLearning.vue");
+const GetData = ()=> import("../views/study-view/GetData.vue");
 
 
 const router = createRouter({

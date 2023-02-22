@@ -1,18 +1,18 @@
 <template>
-    <!-- 表格 -->
-    <div style="width: 80%; float:left">
-      <a-table 
-        :columns="columns" 
-        :data-source="dataSource" 
-        bordered 
-        :pagination="{ pageSize: 5}"
-        show-less-items
-      >
-      </a-table>
-    </div>
-  </template>
-  <script>
-    import { EditOutlined , DeleteOutlined} from '@ant-design/icons-vue';
+  <!-- 表格 -->
+  <div style="width: 80%; float:left">
+    <a-table 
+      :columns="columns" 
+      :data-source="dataSource" 
+      bordered 
+      :pagination="{ pageSize: 5}"
+      show-less-items
+      :loading="loading"
+    >
+    </a-table>
+  </div>
+</template>
+<script>
     import { defineComponent, ref, inject, provide } from 'vue';
     import axios from 'axios';
   
@@ -52,7 +52,7 @@
         ]);
         let dataSource = ref([]);
         let dataDetName =ref('');
-        dataSource = inject('dataSource1')
+        const loading = ref(true)
         dataDetName = inject('dataDetName')
         
         axios({
@@ -69,17 +69,19 @@
             i++;
           });
           console.log(dataSource.value);
+          loading.value = false
         })
 
         return {
           columns,
           dataSource,
+          loading
         };
       },
       
     });
-    </script>
-    <style>
+</script>
+<style>
   
-    </style>
+</style>
     

@@ -16,12 +16,20 @@
             <UploadData ref="childUpload"/>
             <!-- table -->
             <router-view/>
+            <!-- 表单 -->
+            <a-modal v-model:visible="visible" width="40%" title="数据集">
+              <p>确认提交数据集{{dataDetName}}？</p>
+              <template #footer>
+                <a-button key="back" @click="cancelOk">取消</a-button>
+                <a-button key="submit" type="primary" @click="handleOk">提交</a-button>
+              </template>
+            </a-modal>
         </div>
         <!-- 上一步 下一步 -->
         <div class="space-align-block" :style="{background:'#fff', width:'100%',paddingBottom:'20px',}">
           <center>
             <a-space>
-              <a-button danger @click="previousStep">上一步</a-button><span>&nbsp;</span>
+              <a-button danger @click="previousStep" :disabled="current == 0">上一步</a-button><span>&nbsp;</span>
             </a-space>
             <a-space>
               <a-button type="primary" ghost @click="nextStep">下一步</a-button>
@@ -41,7 +49,6 @@ export default defineComponent({
     UploadData,
   },
   setup() {
-    // 表单
     const childUpload = ref();
     const childTable = ref();
     const current = ref(0);
@@ -52,6 +59,8 @@ export default defineComponent({
     const nextStep = () =>{
       if(current.value<3){
         current.value = current.value + 1
+      }else if(current.value == 3){
+        showModal();
       }
       if(current.value == 1){
         dataSource1.value = childUpload.value.dataSource1;
@@ -81,10 +90,23 @@ export default defineComponent({
         router.push({name:'search'})
       }
     }
-
+    // 表格
     provide('dataSource1',dataSource1);
     provide('dataDetName',dataDetName);
     
+    // 表单
+    const visible = ref(false);
+    const showModal = () => {
+      visible.value = true;
+    };
+    const handleOk = e => {
+      console.log(e);
+      visible.value = false;
+    };
+    const cancelOk = e => {
+      console.log(e);
+      visible.value = false;
+    };
 
     return {
       collapsed: ref(false),
@@ -92,6 +114,11 @@ export default defineComponent({
       current,
       childUpload,
       childTable,
+      dataDetName,
+      visible,
+      showModal,
+      handleOk,
+      cancelOk,
       nextStep,
       previousStep
     };

@@ -5,7 +5,7 @@
           placeholder="请输入搜索实体名称"
           class="header_input"
           @search="onSearch"
-          style="width: 200px; margin-bottom: 20px;"          
+          style="width: 200px; margin-bottom: 15px;"          
         />
     <a-table
       :columns="columns1"

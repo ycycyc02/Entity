@@ -1,6 +1,6 @@
 <template>
   <!-- 主页面 -->
-  <a-layout style="min-height: 100vh">
+  <a-layout style="{min-height:100vh}">
     <!-- 侧边栏部分 -->
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <div class="logo" />
@@ -21,33 +21,43 @@
             <router-link  to="/manage">数据集管理</router-link>
           </a-menu-item>
         </a-sub-menu>
-        <a-menu-item key="3">
-          <desktop-outlined />
-          <span>Option 2</span>
-        </a-menu-item>
+        <a-sub-menu key="sub2">
+          <template #title>
+            <span>
+              <desktop-outlined />
+              <span>
+                实体链接
+              </span>
+            </span>
+          </template>
+          <a-menu-item key="3">
+            <router-link  to="/entity">训练模型</router-link>
+          </a-menu-item>
+          <a-menu-item key="4">
+            <router-link  to="/linking">进行链接</router-link>
+          </a-menu-item>
+        </a-sub-menu>
         <a-sub-menu key="sub3">
           <template #title>
             <span>
               <user-outlined />
-              <span>User</span>
+              <span>主动学习</span>
             </span>
           </template>
-          <a-menu-item key="4">Bill</a-menu-item>
-          <a-menu-item key="5">Alex</a-menu-item>
+          <a-menu-item key="5">
+            <router-link  to="/getdata">数据获取</router-link>
+          </a-menu-item>
+          <a-menu-item key="6">
+            <router-link  to="/study">数据标注</router-link>
+          </a-menu-item>
         </a-sub-menu>
-        <a-sub-menu key="sub2">
-          <template #title>
+        <a-menu-item key="7">
+          <router-link  to="/result">
+            <file-outlined />
             <span>
-              <team-outlined />
-              <span>Team</span>
+              结果展示
             </span>
-          </template>
-          <a-menu-item key="6">Team 1</a-menu-item>
-          <a-menu-item key="8">Team 2</a-menu-item>
-        </a-sub-menu>
-        <a-menu-item key="9">
-          <file-outlined />
-          <span>File</span>
+          </router-link>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
@@ -56,8 +66,8 @@
   </a-layout>
 </template>
 <script>
-import { PieChartOutlined, DesktopOutlined, UserOutlined, TeamOutlined, FileOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref} from 'vue';
+import { PieChartOutlined, DesktopOutlined, UserOutlined, FileOutlined } from '@ant-design/icons-vue';
+import { defineComponent, ref ,provide,reactive} from 'vue';
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -65,16 +75,24 @@ export default defineComponent({
     PieChartOutlined,
     DesktopOutlined,
     UserOutlined,
-    TeamOutlined,
     FileOutlined,
   },
   setup() {
     const router = useRouter();
     router.push('/data')
     
+    const selectedKeys = ref(['1'])
+    const changeKeys = (key)=>{
+      selectedKeys.value=key
+    }
+    provide('changeKeys',changeKeys)
+
+    const model_name = ref('')
+    provide('model_name',model_name)
+
     return {
       collapsed: ref(false),
-      selectedKeys: ref(['1']),
+      selectedKeys,
     };
   }
 });

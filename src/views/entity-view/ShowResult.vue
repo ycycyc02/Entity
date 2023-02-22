@@ -8,19 +8,19 @@
             :columns="columns" 
             :data-source="dataSource" 
             bordered 
-            :loading="loading"
             :pagination="{ pageSize: 5}"
             show-less-items
             >
             <template #bodyCell="{ record , column }">
                 <template v-if="column.dataIndex === 'operation'">
-                  <a-popconfirm
-                      v-if="dataSource.length"
-                      title="Sure to delete?"
-                      @confirm="onDelete(record.dataset_name)"
-                  >
-                      <a><delete-outlined /></a>
-                  </a-popconfirm>
+                    <a @click="onEdit(record)"><edit-outlined />&nbsp;&nbsp;</a>
+                    <a-popconfirm
+                        v-if="dataSource.length"
+                        title="Sure to delete?"
+                        @confirm="onDelete(record.dataset_name)"
+                    >
+                        <a><delete-outlined /></a>
+                    </a-popconfirm>
                 </template>
             </template>
             </a-table>
@@ -28,24 +28,30 @@
     </a-layout>
 </template>
 <script>
-import { defineComponent, ref } from 'vue';
-import {  DeleteOutlined} from '@ant-design/icons-vue';
+import { defineComponent, ref , inject} from 'vue';
+import {  DeleteOutlined,EditOutlined} from '@ant-design/icons-vue';
 import axios from 'axios';
 
 export default defineComponent({
   components: {
-    DeleteOutlined
+    DeleteOutlined,
+    EditOutlined
   },
   setup() {
     const columns=[
-    {
-        title: '数据集名称',
-        dataIndex: 'dataset_name',
+      {
+        title: '序号',
+        dataIndex: '_id',
         ellipsis: true,
       },
       {
-        title: '数据集大小',
-        dataIndex: 'size',
+        title: 'accuracy',
+        dataIndex: 'accuracy',
+        ellipsis: true,
+      },
+      {
+        title: 'F1-score',
+        dataIndex: 'score',
         ellipsis: true,
       },
       {
@@ -53,17 +59,23 @@ export default defineComponent({
         dataIndex: 'operation',
       }
     ]
-    let dataSource = ref([]);
-    const loading = ref(true);
+    let dataSource = ref([
+      {
+        _id:1,
+        accuracy:'',
+        score:'',
+      }
+    ])
     
-    axios({
-      method: 'get',
-      url: 'http://172.20.137.106:33004/test/getDataset', 
-      data:{}
-    }).then(value=>{
-      loading.value = false;
-      dataSource.value=value.data.data;
-    })
+    const changeKeys = inject('changeKeys')
+    changeKeys(['6']);
+    // axios({
+    //   method: 'get',
+    //   url: 'http://172.20.137.106:33004/test/getDataset', 
+    //   data:{}
+    // }).then(value=>{
+    //   dataSource.value=value.data.data;
+    // })
 
     const onDelete = (dataset_name)=>{
       axios({
@@ -79,7 +91,6 @@ export default defineComponent({
     return {
       columns,
       dataSource,
-      loading,
       onDelete
     };
   }
