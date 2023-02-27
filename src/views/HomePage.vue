@@ -2,9 +2,12 @@
   <!-- 主页面 -->
   <a-layout style="{min-height:100vh}">
     <!-- 侧边栏部分 -->
-    <a-layout-sider v-model:collapsed="collapsed" collapsible>
-      <div class="logo" />
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+    <a-layout-sider v-model:collapsed="collapsed" collapsible :trigger="null" style="box-shadow: 2px 0 6px rgba(0,21,41,.35);" >
+      <div class="logo" >
+        <img src="../assets/logo.svg" style="margin-left: 18px;"/>
+        Ant Design Vue
+      </div>
+      <a-menu v-model:selectedKeys="selectedKeys" v-model:openKeys="openKeys" theme="dark" mode="inline">
         <a-sub-menu key="sub1">
           <template #title>
             <span>
@@ -61,14 +64,28 @@
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <!-- content部分 -->
-    <router-view></router-view>
+    <!-- 顶部 -->
+    <a-layout>
+      <a-layout-header style="background: #fff; padding: 0 ;line-height: 40px;height: 40px;">
+        <menu-unfold-outlined
+          v-if="collapsed"
+          class="trigger"
+          @click="() => (collapsed = !collapsed)"
+        />
+        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+      </a-layout-header>
+      <!-- content部分 -->
+          <router-view></router-view>
+      <a-layout-footer style="text-align: center">
+        Ant Design ©2018 Created by Ant UED
+      </a-layout-footer>
+    </a-layout>
   </a-layout>
 </template>
 <script>
-import { PieChartOutlined, DesktopOutlined, UserOutlined, FileOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref ,provide,reactive} from 'vue';
-import { useRouter } from "vue-router";
+import { PieChartOutlined, DesktopOutlined, UserOutlined, FileOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
+import { defineComponent, ref, provide } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   components: {
@@ -76,38 +93,58 @@ export default defineComponent({
     DesktopOutlined,
     UserOutlined,
     FileOutlined,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined
   },
-  setup() {
-    const router = useRouter();
+  setup () {
+    const router = useRouter()
     router.push('/data')
-    
-    const selectedKeys = ref(['1'])
-    const changeKeys = (key)=>{
-      selectedKeys.value=key
-    }
-    provide('changeKeys',changeKeys)
 
-    const model_name = ref('')
-    provide('model_name',model_name)
+    const selectedKeys = ref(['1'])
+    const changeKeys = (key) => {
+      selectedKeys.value = key
+    }
+    provide('changeKeys', changeKeys)
+
+    const modelName = ref('')
+    provide('modelName', modelName)
 
     return {
       collapsed: ref(false),
       selectedKeys,
-    };
+      openKeys: ref(['sub1'])
+    }
   }
-});
+})
 </script>
 <style>
-#components-layout-demo-side .logo {
-  height: 32px;
-  margin: 16px;
-  background: rgba(255, 255, 255, 0.3);
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo {
+  height:24px;
+  /* background: rgba(255, 255, 255, 0.3); */
+  color:#ffffff;
+  font-size: 16px;
+  margin: 10px;
+  /* font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif; */
+  /* font-weight: 600; */
+  vertical-align: middle;
+  overflow:hidden;
+}
+.logo img {
+  height:24px;
+}
 .site-layout .site-layout-background {
   background: #fff;
-}
-[data-theme='dark'] .site-layout .site-layout-background {
-  background: #141414;
 }
 </style>

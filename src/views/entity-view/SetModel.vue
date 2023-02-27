@@ -9,7 +9,7 @@
       @finishFailed="onFinishFailed"
       style="width:60%;margin-top:25px;float:left;margin-left: 20%;"
     >
-      
+
       <a-form-item
         label="模型选择"
         name="model"
@@ -34,7 +34,7 @@
       >
         <a-input v-model:value="formState.batchsize" />
         </a-form-item>
-        
+
         <a-form-item
           label="epoch"
           name="epoch"
@@ -59,88 +59,88 @@
       </a-form-item>
     </a-form>
   </template>
-  <script>
-  import axios from 'axios';
-  import { defineComponent, reactive, ref, inject} from 'vue';
-  import { useRouter } from "vue-router";
+<script>
+import axios from 'axios'
+import { defineComponent, reactive, ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
 
-  export default defineComponent({
-    setup() {
-      const router = useRouter();
+export default defineComponent({
+  setup () {
+    const router = useRouter()
 
-      const formState = reactive({});
+    const formState = reactive({})
 
-      // 下拉框
-      const options = ref([
-        {
-            label:'模型1',
-            value:'模型1'
-        }
-      ]);
-      
-      const setData = ()=>{
-        // axios('http://172.20.137.106:33004/test/getDataset')
-        // .then(value=>{
-        //   options.value=value.data.data;
-        //   let i=0;
-        //   for(i=0;i<options.value.length;i++){
-        //     options.value[i].value=options.value[i].dataset_name;
-        //     options.value[i].label=options.value[i].dataset_name;
-        //   }
-        // })
+    // 下拉框
+    const options = ref([
+      {
+        label: '模型1',
+        value: '模型1'
       }
-      
-      // 表单
-      const current = inject('current');
-      current.value=2;
-      const auto_increment_id = inject('auto_increment_id');
-      const formState1 = inject('formState');
-      const onFinish = values => {
-        router.push('confirm');
-        let r = new Promise((resolve) =>{
-          let timer = setInterval(() =>{
-            if(auto_increment_id.value){
-              clearInterval(timer)
-              resolve(true)
-            }
-          },100)
-        })
-        r.then((res)=>{
-          axios({
-            method:'post',
-            url:'http://172.20.137.106:33004/test/modelSelection',
-            data:{
-              model_name:formState.model,
-              hyper_parameter:{
-                  batchsize:formState.batchsize,
-                  epoch:formState.epoch,
-                  learning_rate:formState.learning_rate
-              },
-              auto_increment_id:auto_increment_id.value
-            }
-          })
-        })
-        formState1.model = formState.model;
-        formState1.epoch = formState.epoch;
-        formState1.learning_rate = formState.learning_rate;
-      };
-      const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-      };
-      const previousStep = ()=>{
-        router.push('selectkb')
-      }
+    ])
 
-      setData();
-      return {
-        formState,
-        onFinish,
-        onFinishFailed,
-        setData,
-        previousStep,
-        value: ref(undefined),
-        options,
-      };
+    const setData = () => {
+      // axios('http://172.20.137.106:33004/test/getDataset')
+      // .then(value=>{
+      //   options.value=value.data.data;
+      //   let i=0;
+      //   for(i=0;i<options.value.length;i++){
+      //     options.value[i].value=options.value[i].dataset_name;
+      //     options.value[i].label=options.value[i].dataset_name;
+      //   }
+      // })
     }
-  });
-  </script>
+
+    // 表单
+    const current = inject('current')
+    current.value = 2
+    const auto_increment_id = inject('auto_increment_id')
+    const formState1 = inject('formState')
+    const onFinish = values => {
+      router.push('confirm')
+      const r = new Promise((resolve) => {
+        const timer = setInterval(() => {
+          if (auto_increment_id.value) {
+            clearInterval(timer)
+            resolve(true)
+          }
+        }, 100)
+      })
+      r.then((res) => {
+        axios({
+          method: 'post',
+          url: 'http://172.20.137.106:33004/test/modelSelection',
+          data: {
+            model_name: formState.model,
+            hyper_parameter: {
+              batchsize: formState.batchsize,
+              epoch: formState.epoch,
+              learning_rate: formState.learning_rate
+            },
+            auto_increment_id: auto_increment_id.value
+          }
+        })
+      })
+      formState1.model = formState.model
+      formState1.epoch = formState.epoch
+      formState1.learning_rate = formState.learning_rate
+    }
+    const onFinishFailed = errorInfo => {
+      console.log('Failed:', errorInfo)
+    }
+    const previousStep = () => {
+      router.push('selectkb')
+    }
+
+    setData()
+    return {
+      formState,
+      onFinish,
+      onFinishFailed,
+      setData,
+      previousStep,
+      value: ref(undefined),
+      options
+    }
+  }
+})
+</script>

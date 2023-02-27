@@ -1,7 +1,17 @@
 <template>
+  <a-layout-header style="background: #fff; margin-top:1px; padding-left: 24px ">
+    <a-breadcrumb style="margin: 16px 0">
+      <a-breadcrumb-item>首页</a-breadcrumb-item>
+      <a-breadcrumb-item>数据导入</a-breadcrumb-item>
+      <a-breadcrumb-item>数据集上传</a-breadcrumb-item>
+    </a-breadcrumb>
+  </a-layout-header>
+  <a-layout-content
+    :style="{ margin: '16px 16px', padding: '24px', background: '#fff', minHeight: '335px' }"
+  >
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0; height:44px">
-        <div style="width: 600px; margin: 0 auto; padding-top: 20px;">
+      <a-layout-header style="background: #fff; height:48px;padding-bottom: 20px;">
+        <div style="width: 600px; margin: 0 auto;">
           <a-steps :current="current" size="small" >
             <a-step title="上传excel" />
             <a-step title="修改内容" />
@@ -11,9 +21,9 @@
         </div>
       </a-layout-header>
       <a-layout-content>
-        <div :style="{ padding: '24px', background: '#fff', minHeight: '480px', maxHeight: '480px'}">
+        <div :style="{background: '#fff', minHeight: '335px'}">
             <!-- upload -->
-            <UploadData ref="childUpload"/>
+            <UploadData ref="childUpload" v-if="current === 0"/>
             <!-- table -->
             <router-view/>
             <!-- 表单 -->
@@ -26,10 +36,10 @@
             </a-modal>
         </div>
         <!-- 上一步 下一步 -->
-        <div class="space-align-block" :style="{background:'#fff', width:'100%',paddingBottom:'20px',}">
+        <div class="space-align-block" :style="{background:'#fff', width:'100%',paddingBottom:'0px',}">
           <center>
             <a-space>
-              <a-button danger @click="previousStep" :disabled="current == 0">上一步</a-button><span>&nbsp;</span>
+              <a-button danger @click="previousStep" :disabled="current === 0">上一步</a-button><span>&nbsp;</span>
             </a-space>
             <a-space>
               <a-button type="primary" ghost @click="nextStep">下一步</a-button>
@@ -38,75 +48,101 @@
         </div>
       </a-layout-content>
     </a-layout>
+  </a-layout-content>
 </template>
 <script>
-import { defineComponent, ref, provide } from 'vue';
+import { defineComponent, ref, provide } from 'vue'
 import UploadData from './UploadData.vue'
-import router from '@/router';
+import router from '@/router'
+import axios from 'axios'
 
 export default defineComponent({
   components: {
-    UploadData,
+    UploadData
   },
-  setup() {
-    const childUpload = ref();
-    const childTable = ref();
-    const current = ref(0);
-    const dataSource1 =ref([]);
-    const dataDetName = ref('');
+  setup () {
+    const childUpload = ref()
+    const childTable = ref()
+    const current = ref(0)
+    const dataSource1 = ref([])
+    const dataDetName = ref('')
+    const knowledgeBaseName = ref('')
+    const datasetDetails = ref(null)
 
+    const getDatasetDetails = ()=>{
+      axios({
+        method: 'post',
+        url: 'http://172.20.137.106:33004/test/getDatasetDetails',
+        data: {
+          datasetName : dataDetName.value
+        }
+      }).then(res => {
+        if(res.data.error_code === 200){
+          datasetDetails.value = res.data.data
+        }
+      })
+    }
     // 下一步
-    const nextStep = () =>{
-      if(current.value<3){
+    const nextStep = () => {
+      if (current.value < 3) {
         current.value = current.value + 1
-      }else if(current.value == 3){
-        showModal();
+      } else if (current.value === 3) {
+        showModal()
       }
-      if(current.value == 1){
-        dataSource1.value = childUpload.value.dataSource1;
-        dataDetName.value = childUpload.value.inputValue;
-        router.push({name:'table'})
+      if (current.value === 1) {
+        dataSource1.value = childUpload.value.dataSource1
+        dataDetName.value = childUpload.value.dataDetName
+        knowledgeBaseName.value = childUpload.value.inputValue
+        router.push({ name: 'table' })
       }
-      if(current.value == 2){
-        router.push({name:'search'})
+      if (current.value === 2) {
+        router.push({ name: 'search' })
       }
-      if(current.value == 3){
-        router.push({name:'datashow'})
+      if (current.value === 3) {
+        getDatasetDetails()
+        router.push({ name: 'datashow' })
       }
     }
-    const previousStep = () =>{
-      if(current.value > 0){
+    const previousStep = () => {
+      if (current.value > 0) {
         current.value = current.value - 1
       }
-      if(current.value == 0){
-        router.push({name:'data'})
+      if (current.value === 0) {
+        router.push({ name: 'data' })
       }
-      if(current.value == 1){
-        dataSource1.value = childUpload.value.dataSource1;
-        dataDetName.value = childUpload.value.inputValue;
-        router.push({name:'table'})
+      if (current.value === 1) {
+        router.push({ name: 'table' })
+        // dataSource1.value = childUpload.value.dataSource1;
+        // dataDetName.value = childUpload.value.formState.dataDetName;
+        // knowledgeBaseName.value = childUpload.value.formState.inputValue;
       }
-      if(current.value == 2){
-        router.push({name:'search'})
+      if (current.value === 2) {
+        router.push({ name: 'search' })
       }
     }
+    const changeCurrent = (number)=>{
+      current.value = number
+    }
     // 表格
-    provide('dataSource1',dataSource1);
-    provide('dataDetName',dataDetName);
-    
+    provide('dataSource1', dataSource1)
+    provide('dataDetName', dataDetName)
+    provide('changeCurrent',changeCurrent)
+    provide('knowledgeBaseName', knowledgeBaseName)
+    provide('datasetDetails',datasetDetails)
+
     // 表单
-    const visible = ref(false);
+    const visible = ref(false)
     const showModal = () => {
-      visible.value = true;
-    };
+      visible.value = true
+    }
     const handleOk = e => {
-      console.log(e);
-      visible.value = false;
-    };
+      console.log(e)
+      visible.value = false
+    }
     const cancelOk = e => {
-      console.log(e);
-      visible.value = false;
-    };
+      console.log(e)
+      visible.value = false
+    }
 
     return {
       collapsed: ref(false),
@@ -121,7 +157,7 @@ export default defineComponent({
       cancelOk,
       nextStep,
       previousStep
-    };
+    }
   }
-});
+})
 </script>

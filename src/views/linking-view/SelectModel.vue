@@ -1,4 +1,5 @@
 <template>
+  <div>
     <a-form
       :model="formState"
       :label-col="{ span: 4 }"
@@ -20,28 +21,29 @@
         <a-button  type="primary" ghost html-type="submit">下一步</a-button>
       </a-form-item>
     </a-form>
+  </div>
 </template>
 <script>
-    import router from '@/router';
-    import axios from 'axios';
-    import { defineComponent, reactive, inject} from 'vue';
-    export default defineComponent({
-    components: {
-    },
-    setup() {
-        const formState = reactive({});
-        const current = inject('current');
-        current.value = 0
+import router from '@/router'
+import axios from 'axios'
+import { defineComponent, reactive, inject } from 'vue'
+export default defineComponent({
+  components: {
+  },
+  setup () {
+    const formState = reactive({})
+    const current = inject('current')
+    current.value = 0
 
-        const nextStep = ()=>{
-            router.push("start")
-        }
-
-        return {
-            formState,
-            current,
-            nextStep
-        };
+    const nextStep = () => {
+      router.push('start')
     }
-    });
+
+    return {
+      formState,
+      current,
+      nextStep
+    }
+  }
+})
 </script>

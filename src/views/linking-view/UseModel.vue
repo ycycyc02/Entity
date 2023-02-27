@@ -41,48 +41,48 @@
     </div>
 </template>
 <script>
-    import axios from 'axios';
-    import { defineComponent, ref, inject} from 'vue';
-    export default defineComponent({
-    components: {
-    },
-    setup() {
-        const text = ref(null);
-        const entity = ref(null);
-        const kbentity = ref(null);
-        const property = ref(null);
+import axios from 'axios'
+import { defineComponent, ref, inject } from 'vue'
+export default defineComponent({
+  components: {
+  },
+  setup () {
+    const text = ref(null)
+    const entity = ref(null)
+    const kbentity = ref(null)
+    const property = ref(null)
 
-        const current = inject('current');
-        current.value = 1
+    const current = inject('current')
+    current.value = 1
 
-        const onSubmit = () =>{
-            kbentity.value = '腹泻';
-            property.value = "知识库描述信息: related_ symptom 低烧\n\
+    const onSubmit = () => {
+      kbentity.value = '腹泻'
+      property.value = '知识库描述信息: related_ symptom 低烧\n\
 related_ symptom 低血钾\n\
 related_ symptom 恶心\n\
 belong- department 内科\n\
 belong. department 消化内科\n\
-possible_ disease 肺、胸膜阿米巴病"
-            // axios({
-            //     method:'post',
-            //     url:'http://172.20.137.106:33004/test/useModel',
-            //     data:{
-            //         entity:entity.value,
-            //         text:text.value
-            //     }
-            // }).then(res=>{
-            //     kbentity.value = res.data.data.entity;
-            // })
-        }
-
-        return {
-            current,
-            text,
-            entity,
-            kbentity,
-            property,
-            onSubmit
-        };
+possible_ disease 肺、胸膜阿米巴病'
+      // axios({
+      //     method:'post',
+      //     url:'http://172.20.137.106:33004/test/useModel',
+      //     data:{
+      //         entity:entity.value,
+      //         text:text.value
+      //     }
+      // }).then(res=>{
+      //     kbentity.value = res.data.data.entity;
+      // })
     }
-    });
+
+    return {
+      current,
+      text,
+      entity,
+      kbentity,
+      property,
+      onSubmit
+    }
+  }
+})
 </script>

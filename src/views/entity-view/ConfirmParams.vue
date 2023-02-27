@@ -51,7 +51,7 @@
       >
         <a-input v-model:value="formState.batchsize" />
       </a-form-item> -->
-        
+
       <a-form-item
         label="epoch"
         name="epoch"
@@ -74,56 +74,56 @@
     </a-form>
 </template>
 <script>
-import axios from 'axios';
-  import { defineComponent, reactive, inject} from 'vue';
-  import { useRouter } from "vue-router";
+import axios from 'axios'
+import { defineComponent, reactive, inject } from 'vue'
+import { useRouter } from 'vue-router'
 
-  export default defineComponent({
-    setup() {
-      const router = useRouter();
+export default defineComponent({
+  setup () {
+    const router = useRouter()
 
-      const formState = reactive({});
-      
-      // 表单
-      const current = inject('current');
-      current.value=3;
-      const trainingRecordName = inject('trainingRecordName');
-      const formState1 = inject('formState');
+    const formState = reactive({})
+
+    // 表单
+    const current = inject('current')
+    current.value = 3
+    const trainingRecordName = inject('trainingRecordName')
+    const formState1 = inject('formState')
     //   const auto_increment_id = inject('auto_increment_id');
-      const getData = ()=>{
-        axios({
-            url:"http://172.20.137.106:33004/test/getTrainingSetting",
-            method:'post',
-            data:{
-                trainingRecordName:trainingRecordName.value
-            }
-        }).then(res =>{
-            formState.knowledge_base = '知识库1';
-            formState.dataset = res.data.data.dataset;
-            formState.dataset_partition = res.data.data.dataset_partition;
-            formState.model = formState1.model;
-            formState.learning_rate = formState1.learning_rate.toString();
-            formState.epoch = formState1.epoch;
-        })
-      }
-      getData();
-      const onFinish = values => {
-        router.push('');
-      };
-      const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-      };
-      const previousStep = ()=>{
-        router.push('setmodel')
-      }
-
-      return {
-        formState,
-        onFinish,
-        onFinishFailed,
-        previousStep,
-
-      };
+    const getData = () => {
+      axios({
+        url: 'http://172.20.137.106:33004/test/getTrainingSetting',
+        method: 'post',
+        data: {
+          trainingRecordName: trainingRecordName.value
+        }
+      }).then(res => {
+        formState.knowledge_base = '知识库1'
+        formState.dataset = res.data.data.dataset
+        formState.dataset_partition = res.data.data.dataset_partition
+        formState.model = formState1.model
+        formState.learning_rate = formState1.learning_rate.toString()
+        formState.epoch = formState1.epoch
+      })
     }
-  });
-  </script>
+    getData()
+    const onFinish = values => {
+      router.push('')
+    }
+    const onFinishFailed = errorInfo => {
+      console.log('Failed:', errorInfo)
+    }
+    const previousStep = () => {
+      router.push('setmodel')
+    }
+
+    return {
+      formState,
+      onFinish,
+      onFinishFailed,
+      previousStep
+
+    }
+  }
+})
+</script>
