@@ -8,7 +8,7 @@
       </a-layout-header>
       <a-layout-content :style="{margin: '16px 16px', padding: '24px', background: '#fff', minHeight: '400px' }">
         <!-- 表格 -->
-        <DataShow v-if="showDetail" ref='childCharts'/>
+        <DataShow v-show="showDetail" ref='childCharts'/>
         <a-table
           v-if="!showDetail"
           class="ant-table-striped"
@@ -36,7 +36,7 @@
       </a-layout-content>
 </template>
 <script setup>
-import { ref ,provide, inject} from 'vue'
+import { ref ,provide, inject} from 'vue';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue'
 import axios from 'axios'
 import DataShow from './DataShow.vue'
@@ -61,8 +61,7 @@ const columns = [
 ]
 const dataSource = ref([])
 const loading = ref(true)
-const changeCurrent =inject('changeCurrent')
-changeCurrent(2);
+
 const handleResizeColumn = (w, col) => {
   col.width = w
 }
@@ -97,8 +96,9 @@ const onDetail = (dataset_name) => {
   }).then(res => {
     if (res.data.error_code === 200) {
       showDetail.value = true
-      console.log(res.data)
-      console.log(childCharts.value)
+      // console.log(res.data)
+      // console.log(childCharts.value)
+      childCharts.value.getDatasetDetails(dataset_name)
     }
   })
 }

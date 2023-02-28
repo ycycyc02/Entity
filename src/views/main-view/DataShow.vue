@@ -45,7 +45,7 @@
               </a-col>
             </a-row>
           </div>
-          <div style="width:50% ;float:left" >
+          <div style="width:50% ;float:right" >
             <v-chart class="chart" :option="option" style="height:300px;float:left;"/>
           </div>
         </a-tab-pane>
@@ -74,10 +74,14 @@
 import { reactive, ref,inject } from 'vue'
 import VChart from 'vue-echarts'
 import * as echarts from 'echarts';
+import axios from 'axios';
+import { defineExpose } from 'vue';
 import {CloseOutlined} from '@ant-design/icons-vue';
 
-const changeCurrent =inject('changeCurrent')
-changeCurrent(3);
+// const changeCurrent =inject('changeCurrent')
+// const datasetName =inject('dataDetName')
+// changeCurrent(3);
+
 
 const option = reactive({
   title: {
@@ -204,7 +208,6 @@ const changeOptionData = (number, data1, data2) => {
 const training_set_num = ref(null); const training_set_pos_num = ref(null); const training_set_neg_num = ref(null)
 const dev_set_num = ref(null); const dev_set_pos_num = ref(null); const dev_set_neg_num = ref(null)
 const test_set_num = ref(null); const test_set_pos_num = ref(null); const test_set_neg_num = ref(null)
-
 const setDataset = (list) => {
   training_set_num.value = list[0]
   training_set_pos_num.value = list[1]
@@ -216,7 +219,28 @@ const setDataset = (list) => {
   test_set_pos_num.value = list[7]
   test_set_neg_num.value = list[8]
 }
-
+const getDatasetDetails = (dataset_name)=>{
+      axios({
+        method: 'post',
+        url: 'http://172.20.137.106:33004/test/getDatasetDetails',
+        data: {
+          datasetName : dataset_name
+        }
+      }).then(res => {
+        if(res.data.error_code === 200){
+          console.log('yes');
+          training_set_num.value = res.data.data.training_set_num
+          training_set_pos_num.value = res.data.data.training_set_pos_num
+          training_set_neg_num.value = res.data.data.training_set_neg_num
+          dev_set_num.value = res.data.data.dev_set_num
+          dev_set_pos_num.value = res.data.data.dev_set_pos_num
+          dev_set_neg_num.value = res.data.data.dev_set_neg_num
+          test_set_num.value = res.data.data.test_set_num
+          test_set_pos_num.value = res.data.data.test_set_pos_num
+          test_set_neg_num.value = res.data.data.test_set_neg_num
+        }
+      })
+}
 const changePage =inject('changePage')
 
 
@@ -224,7 +248,8 @@ defineExpose({
   changeOptionData,
   setDataset,
   option,
-  option2
+  option2,
+  getDatasetDetails
 })
 </script>
 <style scoped>

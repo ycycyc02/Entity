@@ -95,6 +95,7 @@ export default defineComponent({
       formState.offset = record.offset
       formState.text = record.text
       formState.data = record.data
+      formState.self_defining_id = record.self_defining_id
       // console.log(typeof formState.self_defining_id)
     }
 

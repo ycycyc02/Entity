@@ -69,19 +69,7 @@ export default defineComponent({
     const knowledgeBaseName = ref('')
     const datasetDetails = ref(null)
 
-    const getDatasetDetails = ()=>{
-      axios({
-        method: 'post',
-        url: 'http://172.20.137.106:33004/test/getDatasetDetails',
-        data: {
-          datasetName : dataDetName.value
-        }
-      }).then(res => {
-        if(res.data.error_code === 200){
-          datasetDetails.value = res.data.data
-        }
-      })
-    }
+
     // 下一步
     const nextStep = () => {
       if (current.value < 3) {

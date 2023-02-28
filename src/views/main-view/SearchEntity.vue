@@ -85,11 +85,14 @@ const innerColumns1 = [
 const innerData1 = ref([])
 const data = ref()
 
+
 export default defineComponent({
   components: {
   },
   setup () {
     // 搜索
+    const changeCurrent =inject('changeCurrent')
+    changeCurrent(2);
     const knowledge_base = inject('knowledgeBaseName')
     const onSearch = (searchValue) => {
       axios({
