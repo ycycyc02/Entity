@@ -10,17 +10,59 @@
         <!-- 表格 -->
         <div v-if="showDetail">
           <div style="width:100% ;float:center;">
-            <a-row justify="center" align="middle">
-            <a-col :span="8">
-              <a-statistic title="实体数量" :value="num_entity" />
-            </a-col>
-            <a-col :span="8">
-              <a-statistic title="相似实体数量统计" :value="similar_entity_statistic"/>
-            </a-col>
-            <a-col :span="8">
-              <a-statistic title="实体描述属性数量统计" :value="num_entity_attribute_statistic"/>
-            </a-col>
-            </a-row>
+            <a-card
+              :title="currentKbName"
+              :bordered="false"
+              :size ='small'
+            >
+              <a-row align="middle">
+                <a-col :span="8">
+                  <a-statistic title="实体数量" :value="num_entity"/>
+                </a-col>
+              </a-row>
+              <template #extra>
+                <button 
+                  @click="showDetail = !showDetail"
+                  style="border:none;background-color:transparent;"
+                ><close-outlined /></button>
+              </template>
+            </a-card>
+            <a-card
+              :size ='small'
+              title = '相似实体数量统计'
+              :bordered="false"
+            >
+              <a-row justify="center" align="middle">
+              
+                <a-col :span="8">
+                  <a-statistic title="1-2" :value="similar_entity_statistic[0]"/>
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="3-4" :value="similar_entity_statistic[1]"/>
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="5+" :value="similar_entity_statistic[2]"/>
+                </a-col>
+              </a-row>
+            </a-card>
+            <a-card
+                title = '	实体描述属性数量统计'
+                :bordered="false"
+                :size ='small'
+              >
+              <a-row justify="center" align="middle">
+              
+                <a-col :span="8">
+                  <a-statistic title="1-2" :value="num_entity_attribute_statistic[0]"/>
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="3-4" :value="num_entity_attribute_statistic[1]"/>
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="5+" :value="num_entity_attribute_statistic[2]"/>
+                </a-col>
+              </a-row>
+            </a-card>
           </div>
         </div>
         <a-table
@@ -53,6 +95,9 @@
 import { ref ,provide, inject} from 'vue';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue'
 import axios from 'axios'
+import VChart from 'vue-echarts'
+import * as echarts from 'echarts';
+import {CloseOutlined} from '@ant-design/icons-vue';
 
 const columns = [
   {
@@ -74,6 +119,7 @@ const columns = [
 ]
 const dataSource = ref([])
 const loading = ref(true)
+const currentKbName = ref('')
 
 const handleResizeColumn = (w, col) => {
   col.width = w
@@ -88,10 +134,11 @@ axios({
   })
 })
 const num_entity = ref(0)
-const num_entity_attribute_statistic =ref({})
+const num_entity_attribute_statistic =ref([])
 const similar_entity_statistic =ref([])
 const showDetail = ref(false)
 const onDetail = (kbName) => {
+  currentKbName.value = kbName
   axios({
     method: 'post',
     url: 'http://172.20.137.106:33004/test/getKnowledgeBaseDetails',
@@ -101,12 +148,12 @@ const onDetail = (kbName) => {
   }).then(res=>{
     if(res.data.error_code ===200){
       num_entity.value = res.data.data.num_entity
-      num_entity_attribute_statistic.value = res.data.data.num_entity_attribute_statistic[0]
-      res.data.data.num_entity_attribute_statistic[0].forEach(item=>{
-        console.log(item.key);
+      res.data.data.num_entity_attribute_statistic.map(item=>{
+        num_entity_attribute_statistic.value = [item['1-2'],item['3-4'],item['5+']]
       })
-      console.log(res.data.data.num_entity_attribute_statistic[0]);
-      similar_entity_statistic.value = res.data.data.similar_entity_statistic
+      res.data.data.similar_entity_statistic.map(item=>{
+        similar_entity_statistic.value = [item['1-2'],item['3-4'],item['5+']]
+      })
     }
   })
   showDetail.value =true
@@ -127,5 +174,8 @@ const onDelete = (kbName) => {
 <style scoped>
   .ant-table-striped :deep(.table-striped) td {
     background-color: #fafafa;
+  }
+  .a-statistic{
+    
   }
 </style>

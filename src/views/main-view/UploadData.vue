@@ -19,21 +19,19 @@
         <a-form-item
           label="负样本比例"
         > 
-        <a-row>
-          <a-col :span="24">
-            <a-radio-group v-model:value="formState.negativeProportion" >
-              <a-radio-button value="0.2">0.2</a-radio-button>
-              <a-radio-button value="0.4">0.4</a-radio-button>
-              <a-radio-button value="0.6">0.6</a-radio-button>
-              <a-radio-button value="0.8">0.8</a-radio-button>
-              <a-radio-button name='diy_batch' value="自定义">自定义</a-radio-button>
-            </a-radio-group>
-          </a-col>
-        </a-row>
+          <a-row>
+            <a-col :span="24">
+              <a-radio-group v-model:value="formState.negativeProportion" >
+                <a-radio-button value="0.2">0.2</a-radio-button>
+                <a-radio-button value="0.4">0.4</a-radio-button>
+                <a-radio-button value="0.6">0.6</a-radio-button>
+                <a-radio-button value="0.8">0.8</a-radio-button>
+                <a-radio-button name='diy_batch' value="自定义">自定义</a-radio-button>
+              </a-radio-group>
+            </a-col>
+          </a-row>
           <!-- <a-input v-model:value="formState.negativeProportion" placeholder="比如: 0.8表示对于每个正例生成4个负例"></a-input> -->
         </a-form-item>
-
-
 
         <a-form-item
           label="选择知识库"

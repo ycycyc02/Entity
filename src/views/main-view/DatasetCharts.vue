@@ -37,7 +37,7 @@
                 <a-statistic title="测试集负样本" :value="test_set_neg_num" />
               </a-col>
             </a-row>
-            <a-row align="middle" >
+            <!-- <a-row align="middle" >
               <a-col :span="8">
                 <a-statistic title="训练集实体数量" :value="train" />
               </a-col>
@@ -47,7 +47,7 @@
               <a-col :span="8">
                 <a-statistic title="测试集实体数量" :value="test" />
               </a-col>
-            </a-row>
+            </a-row> -->
           </div>
           <div style="width:50% ;float:right" >
             <v-chart class="chart" :option="option" style="height:300px;width:100%;" autoresize />
@@ -285,7 +285,7 @@ const getDatasetDetails = (datasetName)=>{
     }
   }).then(res => {
     if(res.data.error_code === 200){
-      console.log(res.data.data);
+      // console.log(res.data.data);
       training_set_num.value = res.data.data.training_set_num
       training_set_pos_num.value = res.data.data.training_set_pos_num
       training_set_neg_num.value = res.data.data.training_set_neg_num
@@ -295,7 +295,7 @@ const getDatasetDetails = (datasetName)=>{
       test_set_num.value = res.data.data.test_set_num
       test_set_pos_num.value = res.data.data.test_set_pos_num
       test_set_neg_num.value = res.data.data.test_set_neg_num
-      console.log(res.data.data.entity_num_statistic);
+      // console.log(res.data.data.entity_num_statistic);
       if(res.data.data.entity_num_statistic.length != 0){
         train.value = res.data.data.entity_num_statistic[0].train
         dev.value = res.data.data.entity_num_statistic[0].dev

@@ -103,7 +103,7 @@ const getDataSource =(dataset_name)=>{
       data.pos_label = String(data.pos_label)
       i++
     })
-    console.log(dataSource.value)
+    // console.log(dataSource.value)
     loading.value = false
   })
 }

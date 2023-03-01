@@ -2,12 +2,12 @@
     <a-form
       :model="formState"
       name="basic"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 8 }"
+      :label-col="{ span: 6 }"
+      :wrapper-col="{ span: 18 }"
       autocomplete="off"
       @finish="onFinish"
       @finishFailed="onFinishFailed"
-      style="width:80%;margin-top:25px;float:left;margin-left: 20%;"
+      style="width:80%;margin-top:25px;float:left;margin-left: 5%;"
     >
       <a-form-item
         label="知识库"

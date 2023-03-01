@@ -2,56 +2,144 @@
     <a-form
       :model="formState"
       name="basic"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 8 }"
       autocomplete="off"
       @finish="onFinish"
       @finishFailed="onFinishFailed"
-      style="width:60%;margin-top:25px;float:left;margin-left: 20%;"
+      style="width:80%;margin-top:20px;float:left;margin-left: 5%;"
     >
+    <a-row :gutter=24>
+        <a-col :span="24">
+          <a-form-item
+            label="模型选择"
+            name="model"
+            :label-col="{ span: 3 }"
+            :wrapper-col="{ span: 21 }"
+          >
+            <a-select
+            v-model:value="formState.model"
+            placeholder="Select a model"
+            :options="options"
+            ></a-select>
+          </a-form-item>
+        </a-col>
+      </a-row>
 
-      <a-form-item
-        label="模型选择"
-        name="model"
-        :rules="[{ required: true, message: '请选择模型!' }]"
-      >
-        <a-select
-        v-model:value="formState.model"
-        placeholder="Select a model"
-        style="width: 200px"
-        :options="options"
-        ></a-select>
-      </a-form-item>
-      <br>
+      <a-row :gutter=24>
+        <a-col :span="12">
+          <a-form-item
+            label="学习率"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+          >
+            <a-radio-group v-model:value="formState.randomShuffle" style="width:100%">
+              <a-radio-button value="2e-5">2e-5</a-radio-button>
+              <a-radio-button value="2e-6">2e-6</a-radio-button>
+              <a-radio-button value="2e-7">2e-7</a-radio-button>
+              <a-radio-button value="自定义">自定义</a-radio-button>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12"  >
+          <a-form-item
+            label="最大字符长度"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+          >
+            <!-- <a-form-item> -->
+            <a-radio-group v-model:value="formState.randomShuffle">
+              <a-radio-button value="32">32</a-radio-button>
+              <a-radio-button value="64">64</a-radio-button>
+              <a-radio-button value="128">128</a-radio-button>
+              <a-radio-button value="自定义">自定义</a-radio-button>
+            </a-radio-group>
+            <!-- </a-form-item> -->
+          </a-form-item>
+        </a-col>
+      </a-row>
 
-      <a-form-item
-        label="超参数选择"
-      >
+      <a-row :gutter="24">
+        <a-col  :span="12">
+          <a-form-item
+            name="batch"
+            label="训练批量"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+          >
+            <a-radio-group v-model:value="formState.batch">
+              <a-radio-button value="16">16</a-radio-button>
+              <a-radio-button value="32">32</a-radio-button>
+              <a-radio-button value="48">48</a-radio-button>
+              <a-radio-button value="64">64</a-radio-button>
+              <a-radio-button name='diy_batch' value="自定义">自定义</a-radio-button>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
+        <a-col  :span="12">
+          <a-form-item
+            name="epoch"
+            label="训练轮次"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+          >
+            <a-radio-group v-model:value="formState.epoch">
+              <a-radio-button value="10">10</a-radio-button>
+              <a-radio-button value="20">20</a-radio-button>
+              <a-radio-button value="50">50</a-radio-button>
+              <a-radio-button value="100">100</a-radio-button>
+              <a-radio-button name='diy_batch' value="自定义">自定义</a-radio-button>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
+      </a-row>
+
+      <a-row :gutter=24>
+        <a-col :span="24">
+          <a-form-item
+            label="随即失活"
+            :label-col="{ span: 3 }"
+            :wrapper-col="{ span: 21 }"
+          >
+            <a-radio-group v-model:value="formState.loss">
+              <a-radio-button value="0">0</a-radio-button>
+              <a-radio-button value="0.1">0.1</a-radio-button>
+              <a-radio-button value="0.2">0.2</a-radio-button>
+              <a-radio-button value="0.3">0.3</a-radio-button>
+              <a-radio-button value="0.4">0.4</a-radio-button>
+              <a-radio-button value="0.5">0.5</a-radio-button>
+              <a-radio-button value="自定义">自定义</a-radio-button>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
+      </a-row>
+
+      <a-row :gutter=24>
+        <a-col :span="24">
+          <a-form-item
+            label="损失函数"
+            :label-col="{ span: 3 }"
+            :wrapper-col="{ span: 21 }"
+          >
+            <a-radio-group v-model:value="formState.loss">
+              <a-radio-button value="categorical_crossentropy">categorical_crossentropy</a-radio-button>
+              <a-radio-button value="sparse_categorical_crossentropy">sparse_categorical_crossentropy</a-radio-button>
+              <a-radio-button value="binary_crossentropy">binary_crossentropy</a-radio-button>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
+        <a-col :span="24"  >
         <a-form-item
-        label="batchsize"
-        name="batchsize"
-        :rules="[{ required: true, message: '请输入batchsize!' }]"
-      >
-        <a-input v-model:value="formState.batchsize" />
-        </a-form-item>
-
-        <a-form-item
-          label="epoch"
-          name="epoch"
-          :rules="[{ required: true, message: '请输入epoch!' }]"
-        >
-          <a-input v-model:value="formState.epoch" />
-        </a-form-item>
-
-        <a-form-item
-          label="learning_rate"
-          name="learning_rate"
-          :rules="[{ required: true, message: '请输入learning_rate!' }]"
-        >
-          <a-input v-model:value="formState.learning_rate" />
-        </a-form-item>
-      </a-form-item>
-      <br>
+          label="	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "
+          :colon="false"
+          :label-col="{ span: 3 }"
+            :wrapper-col="{ span: 21 }"
+          >
+              <a-radio-group v-model:value="formState.loss">
+                <a-radio-button value="mean_squared_error">mean_squared_error</a-radio-button>
+                <a-radio-button value="mean_absolute_error">mean_absolute_error</a-radio-button>
+              </a-radio-group>
+          </a-form-item>
+        </a-col>
+      </a-row>
 
       <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
         <span><a-button  danger @click="previousStep">上一步</a-button>&nbsp;&nbsp;&nbsp;</span>

@@ -3,7 +3,7 @@
   <a-layout style="{min-height:100vh}">
     <!-- 侧边栏部分 -->
     <a-layout-sider v-model:collapsed="collapsed" collapsible :trigger="null" style="box-shadow: 2px 0 6px rgba(0,21,41,.35);" >
-      <div class="logo" >
+      <div class="logo" style="margin: 10px;">
         <img src="../assets/logo.svg" style="margin-left: 18px;"/>
         Ant Design Vue
       </div>
@@ -89,6 +89,7 @@
 import { PieChartOutlined, DesktopOutlined, UserOutlined, FileOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
 import { defineComponent, ref, provide } from 'vue'
 import { useRouter } from 'vue-router'
+import picture from '../assets/logo.svg';
 
 export default defineComponent({
   components: {
@@ -115,7 +116,7 @@ export default defineComponent({
     return {
       collapsed: ref(false),
       selectedKeys,
-      openKeys: ref(['sub1'])
+      openKeys: ref(['sub1']),
     }
   }
 })
@@ -123,7 +124,7 @@ export default defineComponent({
 <style>
 .trigger {
   font-size: 18px;
-  line-height: 64px;
+  line-height: 18px;
   padding: 0 24px;
   cursor: pointer;
   transition: color 0.3s;

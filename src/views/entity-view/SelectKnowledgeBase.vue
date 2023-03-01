@@ -2,12 +2,12 @@
     <a-form
       :model="formState"
       name="basic"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 8 }"
+      :label-col="{ span: 6 }"
+      :wrapper-col="{ span: 18 }"
       autocomplete="off"
       @finish="onFinish"
       @finishFailed="onFinishFailed"
-      style="width:60%;margin-top:25px;float:left;margin-left: 20%;"
+      style="width:80%;margin-top:20px;float:left;margin-left: 10%;"
     >
 
       <a-form-item
@@ -17,9 +17,11 @@
       >
         <a-select
         v-model:value="formState.knowledge_base"
+        show-search
+        :loading="loading"
         placeholder="Select a knowledge_base"
-        style="width: 200px"
         :options="options"
+        :filter-option="filterOption"
         ></a-select>
       </a-form-item>
       <br>
@@ -42,22 +44,23 @@ export default defineComponent({
     const formState = reactive({})
 
     // 下拉框
-    const options = ref([
-      {
-        label: '知识库1',
-        value: '知识库1'
-      }
-    ])
+    const loading = ref(true)
+    const options = ref([])
+    const filterOption = (input, option) => {
+      return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    }; 
     const setData = () => {
-      // axios('http://172.20.137.106:33004/test/getDataset')
-      // .then(value=>{
-      //   options.value=value.data.data;
-      //   let i=0;
-      //   for(i=0;i<options.value.length;i++){
-      //     options.value[i].value=options.value[i].dataset_name;
-      //     options.value[i].label=options.value[i].dataset_name;
-      //   }
-      // })
+      axios('http://172.20.137.106:33004/test/getAllKnowledgeBases')
+      .then(value=>{
+        var temp = []
+        temp=value.data.data.name_list;
+        let i=0;
+        for(i=0;i<temp.length;i++){
+          console.log(temp[0]);
+          options.value.push({value:temp[i][0],label:temp[i][0]})
+        }
+        loading.value = false
+      })
     }
 
     // 表单
@@ -104,7 +107,9 @@ export default defineComponent({
       setData,
       previousStep,
       value: ref(undefined),
-      options
+      options,
+      loading,
+      filterOption
     }
   }
 })

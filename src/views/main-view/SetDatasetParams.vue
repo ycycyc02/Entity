@@ -79,9 +79,10 @@ export default defineComponent({
 
     const onFinish = values => {
       if(formState.trainingSetPartition!= undefined && formState.validationSetPartition!= undefined && formState.testSetPartition!=undefined && formState.randomShuffle!= undefined){
-        if ((parseFloat(formState.trainingSetPartition) + parseFloat(formState.validationSetPartition) + parseFloat(formState.testSetPartition)) != 1) {
+        var result = parseFloat(formState.trainingSetPartition) + parseFloat(formState.validationSetPartition) + parseFloat(formState.testSetPartition)
+      if (parseFloat(result.toFixed(10)) != 1) {
           message.error('训练集、验证集、测试集比例之和应为1')
-          // console.log(typeof values.trainingSetPartition);
+          console.log(parseFloat(formState.trainingSetPartition) + parseFloat(formState.validationSetPartition) ,parseFloat(formState.testSetPartition));
         } else {
           // router.push({ name: 'selectkb' })
           // trainingRecordName.value = values.trainingRecordName
