@@ -62,6 +62,7 @@ export default defineComponent({
         loading.value = false
       })
     }
+    setData()
 
     // 表单
     const current = inject('current')
@@ -99,17 +100,16 @@ export default defineComponent({
       setId(null)
     }
 
-    setData()
     return {
       formState,
       onFinish,
       onFinishFailed,
-      setData,
       previousStep,
       value: ref(undefined),
       options,
       loading,
-      filterOption
+      filterOption,
+      setData,
     }
   }
 })

@@ -43,11 +43,11 @@
         <a-radio-button value="0.6">0.6</a-radio-button>
         <a-radio-button value="0.7">0.7</a-radio-button>
         <a-radio-button value="0.8">0.8</a-radio-button>
-        <a-radio-button value="自定义" v-if="formState.trainingSetPartition!='自定义'">自定义</a-radio-button>
         <a-input 
-          style="width:16.66%" v-if="formState.trainingSetPartition==='自定义'"
+          class="item4"
           v-model:value="formState.trainingSetPartition"
-        ></a-input>
+          placeholder="自定义"
+        >自定义</a-input>
       </a-radio-group>
     </a-form-item>
 
@@ -61,7 +61,11 @@
         <a-radio-button value="0.3">0.3</a-radio-button>
         <a-radio-button value="0.4">0.4</a-radio-button>
         <a-radio-button value="0.5">0.5</a-radio-button>
-        <a-radio-button value="自定义">自定义</a-radio-button>
+        <a-input 
+          class="item4" 
+          v-model:value="formState.validationSetPartition"
+          placeholder="自定义"
+        >自定义</a-input>
       </a-radio-group>
     </a-form-item>
 
@@ -75,7 +79,11 @@
         <a-radio-button value="0.3">0.3</a-radio-button>
         <a-radio-button value="0.4">0.4</a-radio-button>
         <a-radio-button value="0.5">0.5</a-radio-button>
-        <a-radio-button value="自定义">自定义</a-radio-button>
+        <a-input 
+          class="item4" 
+          v-model:value="formState.testSetPartition"
+          placeholder="自定义"
+        >自定义</a-input>
       </a-radio-group>
     </a-form-item>
 
@@ -99,15 +107,21 @@
 <script>
 import { message } from 'ant-design-vue';
 import axios from 'axios';
-import { defineComponent, reactive, ref, inject} from 'vue';
+import { defineComponent, reactive, ref, inject ,watch} from 'vue';
 import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
     const router = useRouter();
 
-    const formState = reactive({
-    });
+    const formState= reactive({
+        trainingSetPartition:undefined,
+        trainingRecordName:undefined,
+        randomShuffle:undefined,
+        validationSetPartition:undefined,
+        dataSetName:undefined,
+        testSetPartition:undefined,
+      })
 
     // 下拉框
     const options = ref([
@@ -182,9 +196,15 @@ export default defineComponent({
 .ant-radio-group {
   width:100%;
   text-align: center;
+  display: flex;
 }
 
 .ant-radio-button-wrapper{
-  width:16.66%
+  border-radius: 0 0 0 0;
+  width:500px;
+}
+.item4 ,.item5{
+  width:500px;
+  border-radius: 0 2px 2px 0;
 }
 </style>

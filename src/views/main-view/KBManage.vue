@@ -11,57 +11,18 @@
         <div v-if="showDetail">
           <div style="width:100% ;float:center;">
             <a-card
-              :title="currentKbName"
+              :title="'当前知识库：'+currentKbName + '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;实体数量：'+num_entity"
               :bordered="false"
               :size ='small'
             >
-              <a-row align="middle">
-                <a-col :span="8">
-                  <a-statistic title="实体数量" :value="num_entity"/>
-                </a-col>
-              </a-row>
+              <v-chart class="chart" :option="option1" style="width:50%;height:280px;float:left;" autoresize />
+              <v-chart class="chart" :option="option2" style="width:50%;height:280px;float:left;" autoresize />
               <template #extra>
                 <button 
                   @click="showDetail = !showDetail"
                   style="border:none;background-color:transparent;"
                 ><close-outlined /></button>
               </template>
-            </a-card>
-            <a-card
-              :size ='small'
-              title = '相似实体数量统计'
-              :bordered="false"
-            >
-              <a-row justify="center" align="middle">
-              
-                <a-col :span="8">
-                  <a-statistic title="1-2" :value="similar_entity_statistic[0]"/>
-                </a-col>
-                <a-col :span="8">
-                  <a-statistic title="3-4" :value="similar_entity_statistic[1]"/>
-                </a-col>
-                <a-col :span="8">
-                  <a-statistic title="5+" :value="similar_entity_statistic[2]"/>
-                </a-col>
-              </a-row>
-            </a-card>
-            <a-card
-                title = '	实体描述属性数量统计'
-                :bordered="false"
-                :size ='small'
-              >
-              <a-row justify="center" align="middle">
-              
-                <a-col :span="8">
-                  <a-statistic title="1-2" :value="num_entity_attribute_statistic[0]"/>
-                </a-col>
-                <a-col :span="8">
-                  <a-statistic title="3-4" :value="num_entity_attribute_statistic[1]"/>
-                </a-col>
-                <a-col :span="8">
-                  <a-statistic title="5+" :value="num_entity_attribute_statistic[2]"/>
-                </a-col>
-              </a-row>
             </a-card>
           </div>
         </div>
@@ -92,13 +53,128 @@
       </a-layout-content>
 </template>
 <script setup>
-import { ref ,provide, inject} from 'vue';
+import { ref ,reactive, inject} from 'vue';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue'
 import axios from 'axios'
 import VChart from 'vue-echarts'
 import * as echarts from 'echarts';
 import {CloseOutlined} from '@ant-design/icons-vue';
 
+// 图
+const option1 = reactive({
+  title: {
+    text: '相似实体数量统计',
+    left: 'center'
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      dataView: { readOnly: false },
+      magicType: { type: ['line', 'bar'] },
+      restore: {},
+      saveAsImage: {}
+    }
+
+  },
+  grid: {
+    left: '2%',
+    right: '2%',
+    bottom: '2%',
+    containLabel: true
+  },
+  tooltip: {
+    trigger: 'item'
+  },
+  legend: {
+    top: '8%',
+    left: 'center'
+  },
+  series: [
+    {
+      // name: 'Access From',
+      type: 'pie',
+      radius: ['30%', '65%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      label: {
+        show: false
+      },
+      data: [
+        { value: 1048, name: '1-2' },
+        { value: 735, name: '3-4' },
+        { value: 580, name: '5+' }
+      ]
+    }
+  ]
+})
+const option2 = reactive({
+  title: {
+    text: '实体描述属性数量统计',
+    left: 'center'
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      dataView: { readOnly: false },
+      magicType: { type: ['line', 'bar'] },
+      restore: {},
+      saveAsImage: {}
+    }
+
+  },
+  grid: {
+    left: '2%',
+    right: '2%',
+    bottom: '2%',
+    containLabel: true
+  },
+  tooltip: {
+    trigger: 'item'
+  },
+  legend: {
+    top: '8%',
+    left: 'center'
+  },
+  series: [
+    {
+      // name: 'Access From',
+      type: 'pie',
+      radius: ['30%', '65%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      label: {
+        show: false
+      },
+      data: [
+        { value: 1048, name: '1-2' },
+        { value: 735, name: '3-4' },
+        { value: 580, name: '5+' }
+      ]
+    }
+  ]
+})
+const changeOptionData = (number, data) => {
+  if (number === 1) {
+    for(var i=0;i<option1.series[0].data.length;i++){
+      option1.series[0].data[i].value = data[i]
+    }
+  } else if (number === 2) {
+    for(var i=0;i<option2.series[0].data.length;i++){
+      option2.series[0].data[i].value = data[i]
+    }
+    // option2.series[1].data = data2
+  }
+}
+
+// 表格
 const columns = [
   {
     title: '知识库名称',
@@ -150,15 +226,16 @@ const onDetail = (kbName) => {
       num_entity.value = res.data.data.num_entity
       res.data.data.num_entity_attribute_statistic.map(item=>{
         num_entity_attribute_statistic.value = [item['1-2'],item['3-4'],item['5+']]
+        changeOptionData(2,[item['1-2'],item['3-4'],item['5+']])
       })
       res.data.data.similar_entity_statistic.map(item=>{
         similar_entity_statistic.value = [item['1-2'],item['3-4'],item['5+']]
+        changeOptionData(1,[item['1-2'],item['3-4'],item['5+']])
       })
     }
   })
   showDetail.value =true
 }
-
 const onDelete = (kbName) => {
   // axios({
   //   method: 'post',
@@ -169,6 +246,7 @@ const onDelete = (kbName) => {
   // })
   dataSource.value = dataSource.value.filter(item => item.dataset_name !== dataset_name)
 }
+
 
 </script>
 <style scoped>

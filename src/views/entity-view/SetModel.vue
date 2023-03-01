@@ -31,11 +31,15 @@
             :label-col="{ span: 6 }"
             :wrapper-col="{ span: 18 }"
           >
-            <a-radio-group v-model:value="formState.randomShuffle" style="width:100%">
+            <a-radio-group v-model:value="formState.learningRate" style="width:100%" >
               <a-radio-button value="2e-5">2e-5</a-radio-button>
               <a-radio-button value="2e-6">2e-6</a-radio-button>
               <a-radio-button value="2e-7">2e-7</a-radio-button>
-              <a-radio-button value="自定义">自定义</a-radio-button>
+              <a-input 
+                class = 'item4' 
+                v-model:value="formState.learningRate"
+                placeholder="自定义"
+              >自定义</a-input>
             </a-radio-group>
           </a-form-item>
         </a-col>
@@ -46,11 +50,15 @@
             :wrapper-col="{ span: 18 }"
           >
             <!-- <a-form-item> -->
-            <a-radio-group v-model:value="formState.randomShuffle">
+            <a-radio-group v-model:value="formState.maxCharLength">
               <a-radio-button value="32">32</a-radio-button>
               <a-radio-button value="64">64</a-radio-button>
               <a-radio-button value="128">128</a-radio-button>
-              <a-radio-button value="自定义">自定义</a-radio-button>
+              <a-input 
+                class = 'item4' 
+                v-model:value="formState.maxCharLength"
+                placeholder="自定义"
+              >自定义</a-input>
             </a-radio-group>
             <!-- </a-form-item> -->
           </a-form-item>
@@ -66,11 +74,15 @@
             :wrapper-col="{ span: 18 }"
           >
             <a-radio-group v-model:value="formState.batch">
-              <a-radio-button value="16">16</a-radio-button>
+              <a-radio-button value="16" >16</a-radio-button>
               <a-radio-button value="32">32</a-radio-button>
               <a-radio-button value="48">48</a-radio-button>
               <a-radio-button value="64">64</a-radio-button>
-              <a-radio-button name='diy_batch' value="自定义">自定义</a-radio-button>
+              <a-input 
+                class = 'item4' 
+                v-model:value="formState.batch"
+                placeholder="自定义"
+              >自定义</a-input>
             </a-radio-group>
           </a-form-item>
         </a-col>
@@ -86,7 +98,11 @@
               <a-radio-button value="20">20</a-radio-button>
               <a-radio-button value="50">50</a-radio-button>
               <a-radio-button value="100">100</a-radio-button>
-              <a-radio-button name='diy_batch' value="自定义">自定义</a-radio-button>
+              <a-input 
+                class = 'item4' 
+                v-model:value="formState.epoch"
+                placeholder="自定义"
+              >自定义</a-input>
             </a-radio-group>
           </a-form-item>
         </a-col>
@@ -99,14 +115,18 @@
             :label-col="{ span: 3 }"
             :wrapper-col="{ span: 21 }"
           >
-            <a-radio-group v-model:value="formState.loss">
+            <a-radio-group v-model:value="formState.dropout">
               <a-radio-button value="0">0</a-radio-button>
               <a-radio-button value="0.1">0.1</a-radio-button>
               <a-radio-button value="0.2">0.2</a-radio-button>
               <a-radio-button value="0.3">0.3</a-radio-button>
               <a-radio-button value="0.4">0.4</a-radio-button>
               <a-radio-button value="0.5">0.5</a-radio-button>
-              <a-radio-button value="自定义">自定义</a-radio-button>
+              <a-input 
+                class = 'item4' 
+                v-model:value="formState.dropout"
+                placeholder="自定义"
+              >自定义</a-input>
             </a-radio-group>
           </a-form-item>
         </a-col>
@@ -131,7 +151,7 @@
           label="	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "
           :colon="false"
           :label-col="{ span: 3 }"
-            :wrapper-col="{ span: 21 }"
+            :wrapper-col="{ span: 14 }"
           >
               <a-radio-group v-model:value="formState.loss">
                 <a-radio-button value="mean_squared_error">mean_squared_error</a-radio-button>
@@ -232,3 +252,19 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.ant-radio-group {
+  width:100%;
+  text-align: center;
+  display: flex;
+}
+
+.ant-radio-button-wrapper{
+  border-radius: 0 0 0 0;
+  width:500px;
+}
+.item4 ,.item5{
+  width:500px;
+  border-radius: 0 2px 2px 0;
+}
+</style>

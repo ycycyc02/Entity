@@ -2,9 +2,9 @@
   <div>
     <div style="background:#fff;width: 100%;float:left;padding:-24">
       <a-tabs v-model:activeKey="activeKey" type="card" centered>
-        <a-tab-pane key="1" tab="数据集概览" size="small">
-          <div style="width:50% ;float:left;">
-            <a-row justify="center" align="middle">
+        <a-tab-pane key="1" tab="数据集概览" >
+          <div style="width:50% ;float:left;height:300px;">
+            <a-row justify="center" align="middle" style="height:100px;">
             <a-col :span="8">
               <a-statistic title="训练集数量" :value="training_set_num" />
             </a-col>
@@ -15,7 +15,7 @@
               <a-statistic title="训练集负样本" :value="training_set_neg_num"/>
             </a-col>
             </a-row>
-            <a-row justify="center" align="middle" >
+            <a-row justify="center" align="middle" style="height:100px;">
               <a-col :span="8">
                 <a-statistic title="验证集数量" :value="dev_set_num"/>
               </a-col>
@@ -26,7 +26,7 @@
                 <a-statistic title="验证集负样本" :value="dev_set_neg_num"/>
               </a-col>
             </a-row>
-            <a-row align="middle" >
+            <a-row align="middle" style="height:100px;">
               <a-col :span="8">
                 <a-statistic title="测试集数量" :value="test_set_num" />
               </a-col>
@@ -97,7 +97,7 @@ const dataset = useDatasetStore()
 
 const option = reactive({
   title: {
-    text: '导入实体的前后对比',
+    text: '数据集分析',
     left: 'center',
   },
   tooltip: {
@@ -133,13 +133,13 @@ const option = reactive({
   },
   yAxis: {
     type: 'category',
-    data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
+    data: ['正样本', '负样本', '总数量']
   },
   series: [
     {
-      name: '导入前',
+      name: '训练集',
       type: 'bar',
-      data: [18203, 23489, 29034, 104970, 131744, 630230],
+      data: [18203, 23489, 29034],
       label: {
         show: true,
         position: 'right'
@@ -147,15 +147,25 @@ const option = reactive({
       // stack: 'Total'
     },
     {
-      name: '导入后',
+      name: '验证集',
       type: 'bar',
-      data: [19325, 23438, 31000, 121594, 134141, 681807],
+      data: [19325, 23438, 31000],
       label: {
         show: true,
         position: 'right'
       },
       // stack: 'Total'
-    }
+    },
+    {
+      name: '测试集',
+      type: 'bar',
+      data: [18203, 23489, 29034],
+      label: {
+        show: true,
+        position: 'right'
+      },
+      // stack: 'Total'
+    },
   ]
 })
 const option2 = reactive({
@@ -223,6 +233,7 @@ const option3 = reactive({
   legend: {
     top: '8%',
     left:'4%',
+    show:false
   },
 
   grid: {
@@ -252,18 +263,25 @@ const option3 = reactive({
     {
       name: '数据',
       type: 'bar',
-      data: [18203, 23489, 29034],
+      data: [1,2 ,3 ],
       label: {
         // show: true,
         position: 'right'
       },
-    },
+      itemStyle:{
+        color:function(params){
+          var colorlist = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'];
+          return colorlist[params.dataIndex];
+        }
+      }
+    }
   ]
 })
 const changeOptionData = (number, data) => {
   if (number === 1) {
-    // option.series[0].data = data1
-    // option.series[1].data = data2
+    option.series[0].data = data[0]
+    option.series[1].data = data[1]
+    option.series[2].data = data[2]
   } else if (number === 2) {
     for(var i=0;i<option2.series[0].data.length;i++){
       option2.series[0].data[i].value = data[i]
@@ -311,6 +329,11 @@ const getDatasetDetails = (datasetName)=>{
         });
       }
       changeOptionData(2,[train.value,dev.value,test.value])
+      changeOptionData(1,[    
+      [training_set_pos_num.value,dev_set_pos_num.value,test_set_pos_num.value],
+      [training_set_neg_num.value,dev_set_neg_num.value,test_set_neg_num.value],
+      [training_set_num.value,dev_set_num.value,test_set_num.value]
+    ])
     }
   })
 }

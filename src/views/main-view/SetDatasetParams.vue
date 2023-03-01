@@ -1,5 +1,5 @@
 <template>
-  <div style="width:100%; padding-left: 10%;padding-right: 10%;">
+  <div style="width:90%; padding-left: 0%;padding-right: 10%;">
     <a-form
       :model="formState"
       name="basic"
@@ -7,6 +7,8 @@
       @finish="onFinish"
       @finishFailed="onFinishFailed"
       style="padding-top:20px"
+      :label-col="{ span: 6 }"
+      :wrapper-col="{ span: 18 }"
     >
       <a-form-item
         label="训练集比例"
@@ -17,7 +19,11 @@
           <a-radio-button value="0.6">0.6</a-radio-button>
           <a-radio-button value="0.7">0.7</a-radio-button>
           <a-radio-button value="0.8">0.8</a-radio-button>
-          <a-radio-button value="自定义">自定义</a-radio-button>
+          <a-input 
+                class = 'item4' 
+                v-model:value="formState.trainingSetPartition"
+                placeholder="自定义"
+              >自定义</a-input>
         </a-radio-group>
       </a-form-item>
 
@@ -30,7 +36,11 @@
           <a-radio-button value="0.3">0.3</a-radio-button>
           <a-radio-button value="0.4">0.4</a-radio-button>
           <a-radio-button value="0.5">0.5</a-radio-button>
-          <a-radio-button value="自定义">自定义</a-radio-button>
+          <a-input 
+            class = 'item4' 
+            v-model:value="formState.validationSetPartition"
+            placeholder="自定义"
+          >自定义</a-input>
         </a-radio-group>
       </a-form-item>
 
@@ -43,12 +53,18 @@
           <a-radio-button value="0.3">0.3</a-radio-button>
           <a-radio-button value="0.4">0.4</a-radio-button>
           <a-radio-button value="0.5">0.5</a-radio-button>
-          <a-radio-button value="自定义">自定义</a-radio-button>
+          <a-input 
+                class = 'item4' 
+                v-model:value="formState.testSetPartition"
+                placeholder="自定义"
+              >自定义</a-input>
         </a-radio-group>
       </a-form-item>
 
       <a-form-item
         label="是否随机划分"
+        :label-col="{ span: 6 }"
+        :wrapper-col="{ span: 6 }"
       >
         <a-radio-group v-model:value="formState.randomShuffle">
           <a-radio-button value="是">是</a-radio-button>
@@ -123,3 +139,19 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+  .ant-radio-group {
+  width:100%;
+  text-align: center;
+  display: flex;
+}
+
+.ant-radio-button-wrapper{
+  border-radius: 0 0 0 0;
+  width:500px;
+}
+.item4 ,.item5{
+  width:500px;
+  border-radius: 0 2px 2px 0;
+}
+</style>

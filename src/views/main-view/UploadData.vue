@@ -26,7 +26,11 @@
                 <a-radio-button value="0.4">0.4</a-radio-button>
                 <a-radio-button value="0.6">0.6</a-radio-button>
                 <a-radio-button value="0.8">0.8</a-radio-button>
-                <a-radio-button name='diy_batch' value="自定义">自定义</a-radio-button>
+                <a-input 
+                  class = 'item4' 
+                  v-model:value="formState.negativeProportion"
+                  placeholder="自定义"
+                >自定义</a-input>              
               </a-radio-group>
             </a-col>
           </a-row>
@@ -37,9 +41,14 @@
           label="选择知识库"
           name="知识库名称"
         >
-          <a-select v-model:value="formState.kbBaseName" placeholder="请选择知识库">
-            <a-select-option value="script_ccks2019_kb" >script_ccks2019_kb</a-select-option>
-          </a-select>
+          <a-select
+            v-model:value="formState.kbBaseName"
+            show-search
+            :loading="loading"
+            placeholder="请选择知识库"
+            :options="options"
+            :filter-option="filterOption"
+          ></a-select>
         </a-form-item>
 
         <a-form-item
@@ -116,6 +125,7 @@ export default defineComponent({
     const inputValue = ref('')
     const dataset = useDatasetStore()
 
+    // 上传
     const handleRemove = file => {
       const index = fileList.value.indexOf(file)
       const newFileList = fileList.value.slice()
@@ -178,9 +188,31 @@ export default defineComponent({
             fileList.value = []
             message.error('上传失败,请检查文件格式是否正确！')
           }
+        },reason =>{
+          message.error('上传失败，请检查所用知识库是否正确!')
         })
       }
     }
+    // 知识库选择
+    const loading = ref(true)
+    const options = ref([])
+    const filterOption = (input, option) => {
+      return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    }; 
+    const setData = () => {
+      axios('http://172.20.137.106:33004/test/getAllKnowledgeBases')
+      .then(value=>{
+        var temp = []
+        temp=value.data.data.name_list;
+        let i=0;
+        for(i=0;i<temp.length;i++){
+          console.log(temp[0]);
+          options.value.push({value:temp[i][0],label:temp[i][0]})
+        }
+        loading.value = false
+      })
+    }
+    setData()
 
 
 
@@ -192,7 +224,11 @@ export default defineComponent({
       formState,
       handleChange,
       inputValue,
-      dataDetName
+      dataDetName,
+      options,
+      loading,
+      filterOption,
+      setData,
     }
   }
 })
@@ -200,9 +236,16 @@ export default defineComponent({
 <style scoped>
 .ant-radio-group {
   width:100%;
-  /* text-align: center; */
+  text-align: center;
+  display: flex;
 }
+
 .ant-radio-button-wrapper{
-  width:20%
+  border-radius: 0 0 0 0;
+  width:500px;
+}
+.item4 ,.item5{
+  width:500px;
+  border-radius: 0 2px 2px 0;
 }
 </style>
