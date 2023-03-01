@@ -47,6 +47,7 @@
 //   import { EditOutlined , DeleteOutlined} from '@ant-design/icons-vue';
 import { defineComponent, ref, inject } from 'vue'
 import axios from 'axios'
+import { useDatasetStore } from '@/stores/dataset'
 
 const columns1 = [
   {
@@ -93,14 +94,15 @@ export default defineComponent({
     // 搜索
     const changeCurrent =inject('changeCurrent')
     changeCurrent(2);
-    const knowledge_base = inject('knowledgeBaseName')
+    const dataset = useDatasetStore()
+
     const onSearch = (searchValue) => {
       axios({
         method: 'post',
         url: 'http://172.20.137.106:33004/test/searchKnowledgeBaseByName',
         data: {
           entityName: searchValue,
-          knowledgeBaseName: knowledge_base.value
+          knowledgeBaseName: dataset.knowledgeBaseName
         }
       }).then(value => {
         data.value = value.data.data

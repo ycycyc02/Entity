@@ -68,7 +68,7 @@
         </a-form>
         <template #footer>
           <a-button key="back" @click="onFinishFailed">取消</a-button>
-          <a-button key="submit" type="primary" @click="onFinish">提交</a-button>
+          <a-button key="submit" type="primary" @click="onFinish">保存</a-button>
         </template>
       </a-modal>
     </div>
@@ -77,6 +77,7 @@
 import { defineComponent, ref, reactive, inject } from 'vue'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
+import { useDatasetStore } from '@/stores/dataset'
 
 export default defineComponent({
   setup () {
@@ -105,33 +106,16 @@ export default defineComponent({
       segment_id: '',
       entity: '',
       subject_id: '',
-      text: ''
+      text: '',
+      data:''
     })
     // 提交表单
+    const dataset = useDatasetStore()
     const onFinish = () => {
-      message.info('正在提交')
+      message.info('保存成功')
       visible.value = false
-      axios({
-        method: 'post',
-        url: 'http://172.20.137.106:33004/test/saveTrainingSet',
-        data: {
-          trainingData: [formState],
-          trainingSetName: dataDetName.value.value,
-          knowledgeBaseName: knowledgeBaseName.value.value
-        }
-
-      }).then(value => {
-        // console.log(value)
-        if (value.data.error_code === 200) {
-          message.success('提交成功')
-          const OldId = formState.self_defining_id
-          formState.self_defining_id = value.data.data.min
-          updateData(formState, OldId)
-          console.log('Success:', formState)
-        } else {
-          message.error('提交失败')
-        }
-      })
+      // dataset.setRecord(formState)
+      updateData(formState, formState.self_defining_id)         
     }
     // 提交失败
     const onFinishFailed = errorInfo => {

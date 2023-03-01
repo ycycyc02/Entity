@@ -5,7 +5,7 @@ import HomePage from '../views/HomePage.vue'
 import DataImport from '../views/main-view/DataImport.vue'
 import TableShow from '../views/main-view/TableShow.vue'
 import SearchEntity from '../views/main-view/SearchEntity.vue'
-import DataShow from '../views/main-view/DataShow.vue'
+import SetDatasetParams from '../views/main-view/SetDatasetParams.vue'
 import SearchDataset from '../views/main-view/SearchDataset.vue'
 import SelectDataset from '../views/entity-view/SelectDataset.vue'
 import DatasetPartition from '../views/entity-view/DatasetPartition.vue'
@@ -18,6 +18,8 @@ import UseModel from '../views/linking-view/UseModel.vue'
 import SelectModel from '../views/linking-view/SelectModel.vue'
 import ActiveLearning from '../views/study-view/ActiveLearning.vue'
 import GetData from '../views/study-view/GetData.vue'
+import KBManage from '../views/main-view/KBManage.vue'
+import DatasetCharts from '../views/main-view/DatasetCharts.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -49,15 +51,25 @@ const router = createRouter({
         },
         {
           path: '/data/show',
-          name: 'datashow',
-          component: DataShow
-        }
+          name: 'setparams',
+          component: SetDatasetParams
+        },
+        {
+          path: '/data/chart',
+          name: 'chart',
+          component: DatasetCharts
+        },
       ]
     },
     {
       path: '/manage',
       name: 'manage',
-      component: SearchDataset
+      component: SearchDataset,
+    },
+    {
+      path: '/kbmanage',
+      name: 'kbmanage',
+      component: KBManage,
     },
     {
       path: '/entity',

@@ -1,27 +1,46 @@
 <template>
     <!-- 上传 -->
-    <div style=" padding-right: 20%;padding-left: 20%;width:100%;">
+    <div style=" padding-left: 10%;width:60%;float:left">
       <a-form
         :model="formState"
         name="basic"
         :label-col="{ span: 4 }"
-        :wrapper-col="{ span: 16 }"
+        :wrapper-col="{ span: 18 }"
         autocomplete="off"
-        style="minHeight: '280px'"
+        style="minHeight: 280px;width:100%"
       >
         <a-form-item
           label="数据集名称"
           name="数据集名称"
         >
-          <a-input v-model:value="formState.datasetName"></a-input>
+          <a-input v-model:value="formState.datasetName" placeholder="请输入数据集名称"></a-input>
         </a-form-item>
+
+        <a-form-item
+          label="负样本比例"
+        > 
+        <a-row>
+          <a-col :span="24">
+            <a-radio-group v-model:value="formState.negativeProportion" >
+              <a-radio-button value="0.2">0.2</a-radio-button>
+              <a-radio-button value="0.4">0.4</a-radio-button>
+              <a-radio-button value="0.6">0.6</a-radio-button>
+              <a-radio-button value="0.8">0.8</a-radio-button>
+              <a-radio-button name='diy_batch' value="自定义">自定义</a-radio-button>
+            </a-radio-group>
+          </a-col>
+        </a-row>
+          <!-- <a-input v-model:value="formState.negativeProportion" placeholder="比如: 0.8表示对于每个正例生成4个负例"></a-input> -->
+        </a-form-item>
+
+
 
         <a-form-item
           label="选择知识库"
           name="知识库名称"
         >
-          <a-select v-model:value="formState.kbBaseName">
-            <a-select-option value="script_ccks2019_kb">script_ccks2019_kb</a-select-option>
+          <a-select v-model:value="formState.kbBaseName" placeholder="请选择知识库">
+            <a-select-option value="script_ccks2019_kb" >script_ccks2019_kb</a-select-option>
           </a-select>
         </a-form-item>
 
@@ -30,7 +49,6 @@
         >
           <a-upload-dragger
             v-model:fileList="fileList"
-            height="200px"
             :action="handleUpload"
             :handleChange ='handleChange'
             :multiple="false"
@@ -45,12 +63,43 @@
         </a-form-item>
       </a-form>
     </div>
+    <div style=" padding-right:10%;width:40%; float:right">
+      <a-alert 
+          message="数据集名称不能重复" 
+          type="info" 
+          show-icon 
+          closable
+          style=""
+          />
+      <a-alert 
+          message="负样本比例: 0.8表示对于每个正例生成4个负例" 
+          type="info" 
+          show-icon 
+          closable
+          style="margin-top: 10px;"
+          />
+      <a-alert 
+        message="请选择选择已有知识库" 
+        type="info" 
+        show-icon 
+        closable
+        style="margin-top: 10px;"
+      />
+      <a-alert 
+        message="请正确上传文件，文件类型为xlsx，列名为auto_increment_id，segment_id，text，entity，subject_id，offset" 
+        type="info" 
+        show-icon 
+        closable
+        style="margin-top: 10px;height:150px"
+      />
+    </div>
 </template>
 <script>
 import axios from 'axios'
 import { InboxOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { defineComponent, ref, reactive } from 'vue'
+import { useDatasetStore } from '@/stores/dataset'
 
 export default defineComponent({
   components: {
@@ -61,12 +110,13 @@ export default defineComponent({
   setup () {
     const formState = reactive({
       inputValue: '',
-      dataDetName: ''
+      datasetName: ''
     })
     const fileList = ref([])
     const dataSource1 = ref([])
     const dataDetName = ref('')
     const inputValue = ref('')
+    const dataset = useDatasetStore()
 
     const handleRemove = file => {
       const index = fileList.value.indexOf(file)
@@ -88,6 +138,9 @@ export default defineComponent({
     const handleUpload = (file) => {
       dataDetName.value = formState.datasetName
       inputValue.value = formState.kbBaseName
+      dataset.setDatasetName(formState.datasetName)
+      dataset.setKnowledgeBaseName(formState.kbBaseName)
+      dataset.setNegativeProportion(parseFloat(formState.negativeProportion))
       if (inputValue.value === '') {
         message.error('请选择知识库')
         fileList.value = []
@@ -120,7 +173,9 @@ export default defineComponent({
               }else{
                 item.data = '无'
               }
+              item.key = item.self_defining_id
             })
+            dataset.setDataSource(dataSource1.value)
           } else {
             fileList.value = []
             message.error('上传失败,请检查文件格式是否正确！')
@@ -128,6 +183,8 @@ export default defineComponent({
         })
       }
     }
+
+
 
     return {
       fileList,
@@ -142,3 +199,12 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.ant-radio-group {
+  width:100%;
+  /* text-align: center; */
+}
+.ant-radio-button-wrapper{
+  width:20%
+}
+</style>

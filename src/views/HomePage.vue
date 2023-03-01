@@ -23,6 +23,9 @@
           <a-menu-item key="2">
             <router-link  to="/manage">数据集管理</router-link>
           </a-menu-item>
+          <a-menu-item key="3">
+            <router-link  to="/kbmanage">知识库管理</router-link>
+          </a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="sub2">
           <template #title>
@@ -33,10 +36,10 @@
               </span>
             </span>
           </template>
-          <a-menu-item key="3">
+          <a-menu-item key="4">
             <router-link  to="/entity">训练模型</router-link>
           </a-menu-item>
-          <a-menu-item key="4">
+          <a-menu-item key="5">
             <router-link  to="/linking">进行链接</router-link>
           </a-menu-item>
         </a-sub-menu>
@@ -47,14 +50,14 @@
               <span>主动学习</span>
             </span>
           </template>
-          <a-menu-item key="5">
+          <a-menu-item key="6">
             <router-link  to="/getdata">数据获取</router-link>
           </a-menu-item>
-          <a-menu-item key="6">
+          <a-menu-item key="7">
             <router-link  to="/study">数据标注</router-link>
           </a-menu-item>
         </a-sub-menu>
-        <a-menu-item key="7">
+        <a-menu-item key="8">
           <router-link  to="/result">
             <file-outlined />
             <span>

@@ -8,7 +8,7 @@
       </a-layout-header>
       <a-layout-content :style="{margin: '16px 16px', padding: '24px', background: '#fff', minHeight: '400px' }">
         <!-- 表格 -->
-        <DataShow v-show="showDetail" ref='childCharts'/>
+        <DatasetCharts v-show="showDetail" ref='childCharts'/>
         <a-table
           v-if="!showDetail"
           class="ant-table-striped"
@@ -25,7 +25,7 @@
               <a @click="onDetail(record.dataset_name)"><edit-outlined />&nbsp;&nbsp;</a>
               <a-popconfirm
                   v-if="dataSource.length"
-                  title="Sure to delete?"
+                  title="确定删除?"
                   @confirm="onDelete(record.dataset_name)"
               >
                   <a><delete-outlined /></a>
@@ -39,7 +39,8 @@
 import { ref ,provide, inject} from 'vue';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue'
 import axios from 'axios'
-import DataShow from './DataShow.vue'
+import DatasetCharts from './DatasetCharts.vue'
+import { useDatasetStore } from '@/stores/dataset'; 
 
 const columns = [
   {
@@ -86,21 +87,11 @@ const onDelete = (dataset_name) => {
 
 const childCharts = ref(null)
 const showDetail = ref(false)
+const dataset = useDatasetStore()
 const onDetail = (dataset_name) => {
-  axios({
-    method: 'post',
-    url: 'http://172.20.137.106:33004/test/getDatasetDetails',
-    data: {
-      datasetName: dataset_name
-    }
-  }).then(res => {
-    if (res.data.error_code === 200) {
       showDetail.value = true
-      // console.log(res.data)
-      // console.log(childCharts.value)
-      childCharts.value.getDatasetDetails(dataset_name)
-    }
-  })
+      dataset.setDatasetName(dataset_name)
+      childCharts.value.getDatasetDetails(dataset.datasetName)
 }
 
 const changePage = ()=>{

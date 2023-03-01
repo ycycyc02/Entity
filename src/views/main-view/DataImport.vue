@@ -11,12 +11,13 @@
   >
     <a-layout>
       <a-layout-header style="background: #fff; height:48px;padding-bottom: 20px;">
-        <div style="width: 600px; margin: 0 auto;">
+        <div style="width: 80%; margin: 0 auto;">
           <a-steps :current="current" size="small" >
             <a-step title="上传excel" />
             <a-step title="修改内容" />
             <a-step title="知识库查询" />
-            <a-step title="确认" />
+            <a-step title="划分数据集" />
+            <a-step title="统计结果" />
           </a-steps>
         </div>
       </a-layout-header>
@@ -25,7 +26,7 @@
             <!-- upload -->
             <UploadData ref="childUpload" v-if="current === 0"/>
             <!-- table -->
-            <router-view/>
+            <router-view ref="childView"/>
             <!-- 表单 -->
             <a-modal v-model:visible="visible" width="40%" title="数据集">
               <p>确认提交数据集{{dataDetName}}？</p>
@@ -36,15 +37,16 @@
             </a-modal>
         </div>
         <!-- 上一步 下一步 -->
-        <div class="space-align-block" :style="{background:'#fff', width:'100%',paddingBottom:'0px',}">
-          <center>
-            <a-space>
+        <div style="width:100%;background-color: #fff;">
+          <a-row justify="center" :gutter="24" type="flex" style="width:100%">
+            <a-col :span =2>
               <a-button danger @click="previousStep" :disabled="current === 0">上一步</a-button><span>&nbsp;</span>
-            </a-space>
-            <a-space>
-              <a-button type="primary" ghost @click="nextStep">下一步</a-button>
-            </a-space>
-          </center>
+            </a-col>
+            <a-col :span =1></a-col>
+            <a-col :span =2>
+              <a-button type="primary" ghost @click="nextStep" html-type="submit">下一步</a-button>
+            </a-col>
+          </a-row>
         </div>
       </a-layout-content>
     </a-layout>
@@ -55,6 +57,7 @@ import { defineComponent, ref, provide } from 'vue'
 import UploadData from './UploadData.vue'
 import router from '@/router'
 import axios from 'axios'
+import { useDatasetStore } from '@/stores/dataset'
 
 export default defineComponent({
   components: {
@@ -62,19 +65,30 @@ export default defineComponent({
   },
   setup () {
     const childUpload = ref()
-    const childTable = ref()
+    const childView = ref()
     const current = ref(0)
     const dataSource1 = ref([])
     const dataDetName = ref('')
     const knowledgeBaseName = ref('')
     const datasetDetails = ref(null)
+    const dataset = useDatasetStore();
 
-
+    const addNegativeSample =()=>{
+      axios({
+            method: 'post',
+            url: 'http://172.20.137.106:33004/test/addNegativeSample',
+            data: {
+                datasetName: dataset.datasetName,
+                negativeProportion: dataset.negativeProportion,
+                knowledgeBaseName: dataset.knowledgeBaseName,
+          }
+        })
+    }
     // 下一步
     const nextStep = () => {
-      if (current.value < 3) {
+      if (current.value < 4) {
         current.value = current.value + 1
-      } else if (current.value === 3) {
+      } else if (current.value === 4) {
         showModal()
       }
       if (current.value === 1) {
@@ -87,8 +101,11 @@ export default defineComponent({
         router.push({ name: 'search' })
       }
       if (current.value === 3) {
-        getDatasetDetails()
-        router.push({ name: 'datashow' })
+        addNegativeSample();
+        router.push({ name: 'setparams' })
+      }
+      if (current.value === 4) {
+        router.push({ name: 'chart' })
       }
     }
     const previousStep = () => {
@@ -106,6 +123,9 @@ export default defineComponent({
       }
       if (current.value === 2) {
         router.push({ name: 'search' })
+      }
+      if (current.value === 3) {
+        router.push({ name: 'setparams' })
       }
     }
     const changeCurrent = (number)=>{
@@ -137,7 +157,7 @@ export default defineComponent({
       selectedKeys: ref(['1']),
       current,
       childUpload,
-      childTable,
+      childView,
       dataDetName,
       visible,
       showModal,
