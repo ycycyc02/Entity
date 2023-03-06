@@ -65,7 +65,6 @@
               <InboxOutlined />
             </p>
             <p class="ant-upload-text">点击或拖拽文件到这里上传</p>
-            <p class="ant-upload-hint">Support for a single or bulk upload.</p>
           </a-upload-dragger>
         </a-form-item>
       </a-form>

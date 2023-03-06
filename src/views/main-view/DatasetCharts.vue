@@ -3,65 +3,69 @@
     <div style="background:#fff;width: 100%;float:left;padding:-24">
       <a-tabs v-model:activeKey="activeKey" type="card" centered>
         <a-tab-pane key="1" tab="数据集概览" >
-          <div style="width:50% ;float:left;height:300px;">
-            <a-row justify="center" align="middle" style="height:100px;">
-            <a-col :span="8">
-              <a-statistic title="训练集数量" :value="training_set_num" />
-            </a-col>
-            <a-col :span="8">
-              <a-statistic title="训练集正样本" :value="training_set_pos_num"/>
-            </a-col>
-            <a-col :span="8">
-              <a-statistic title="训练集负样本" :value="training_set_neg_num"/>
-            </a-col>
-            </a-row>
-            <a-row justify="center" align="middle" style="height:100px;">
+          <a-spin :spinning="loading" tip="正在加载..." style="top: 140px;">
+            <div style="width:50% ;float:left;height:300px;">
+              <a-row justify="center" align="middle" style="height:100px;">
               <a-col :span="8">
-                <a-statistic title="验证集数量" :value="dev_set_num"/>
+                <a-statistic title="训练集数量" :value="training_set_num" />
               </a-col>
               <a-col :span="8">
-                <a-statistic title="验证集正样本" :value="dev_set_pos_num"/>
+                <a-statistic title="训练集正样本" :value="training_set_pos_num"/>
               </a-col>
               <a-col :span="8">
-                <a-statistic title="验证集负样本" :value="dev_set_neg_num"/>
+                <a-statistic title="训练集负样本" :value="training_set_neg_num"/>
               </a-col>
-            </a-row>
-            <a-row align="middle" style="height:100px;">
-              <a-col :span="8">
-                <a-statistic title="测试集数量" :value="test_set_num" />
-              </a-col>
-              <a-col :span="8">
-                <a-statistic title="测试集正样本" :value="test_set_pos_num" />
-              </a-col>
-              <a-col :span="8">
-                <a-statistic title="测试集负样本" :value="test_set_neg_num" />
-              </a-col>
-            </a-row>
-            <!-- <a-row align="middle" >
-              <a-col :span="8">
-                <a-statistic title="训练集实体数量" :value="train" />
-              </a-col>
-              <a-col :span="8">
-                <a-statistic title="验证集实体数量" :value="dev" />
-              </a-col>
-              <a-col :span="8">
-                <a-statistic title="测试集实体数量" :value="test" />
-              </a-col>
-            </a-row> -->
-          </div>
-          <div style="width:50% ;float:right" >
-            <v-chart class="chart" :option="option" style="height:300px;width:100%;" autoresize />
-          </div>
+              </a-row>
+              <a-row justify="center" align="middle" style="height:100px;">
+                <a-col :span="8">
+                  <a-statistic title="验证集数量" :value="dev_set_num"/>
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="验证集正样本" :value="dev_set_pos_num"/>
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="验证集负样本" :value="dev_set_neg_num"/>
+                </a-col>
+              </a-row>
+              <a-row align="middle" style="height:100px;">
+                <a-col :span="8">
+                  <a-statistic title="测试集数量" :value="test_set_num" />
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="测试集正样本" :value="test_set_pos_num" />
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="测试集负样本" :value="test_set_neg_num" />
+                </a-col>
+              </a-row>
+              <!-- <a-row align="middle" >
+                <a-col :span="8">
+                  <a-statistic title="训练集实体数量" :value="train" />
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="验证集实体数量" :value="dev" />
+                </a-col>
+                <a-col :span="8">
+                  <a-statistic title="测试集实体数量" :value="test" />
+                </a-col>
+              </a-row> -->
+            </div>
+            <div style="width:50% ;float:right" >
+              <v-chart class="chart" :option="option" style="height:300px;width:100%;" autoresize />
+            </div>
+          </a-spin>
         </a-tab-pane>
         <a-tab-pane key="2" tab="数据构成">
-          <div style="background:#fff;width: 100%;float:left;border-width: 2px;box-shadow: #f5f5f5;">
-            <!-- <a-card
-              style="border-width: 2px;box-shadow: #f5f5f5;"
-            > -->
-            <v-chart class="chart" :option="option3" style="width:50%;height:300px;float:left;" autoresize />
-            <v-chart class="chart" :option="option2" style="width:50%;height:300px;float:left;" autoresize />
-            <!-- </a-card> -->
-          </div>
+          <a-spin :spinning="loading" tip="正在加载..." style="top: 140px;">
+            <div style="background:#fff;width: 100%;float:left;border-width: 2px;box-shadow: #f5f5f5;">
+              <!-- <a-card
+                style="border-width: 2px;box-shadow: #f5f5f5;"
+              > -->
+              <v-chart class="chart" :option="option3" style="width:50%;height:300px;float:left;" autoresize />
+              <v-chart class="chart" :option="option2" style="width:50%;height:300px;float:left;" autoresize />
+              <!-- </a-card> -->
+            </div>
+          </a-spin>
         </a-tab-pane>
         <a-tab-pane key="3" tab="数据集详情">
           <DataShow />
@@ -82,10 +86,11 @@ import { reactive, ref,inject } from 'vue'
 import VChart from 'vue-echarts'
 import * as echarts from 'echarts';
 import axios from 'axios';
-import { defineExpose } from 'vue';
+import { watch } from 'vue';
 import {CloseOutlined} from '@ant-design/icons-vue';
 import { useDatasetStore } from '@/stores/dataset';
 import DataShow from './DataShow.vue'
+import { message } from 'ant-design-vue';
 
 
 // const changeCurrent =inject('changeCurrent')
@@ -113,8 +118,8 @@ const option = reactive({
   },
 
   grid: {
-    left: '2%',
-    right: '2%',
+    left: '3%',
+    right: '6%',
     bottom: '2%',
     containLabel: true
   },
@@ -133,7 +138,7 @@ const option = reactive({
   },
   yAxis: {
     type: 'category',
-    data: ['正样本', '负样本', '总数量']
+    data: ['总数量', '负样本', '正样本']
   },
   series: [
     {
@@ -294,6 +299,7 @@ const training_set_num = ref(null); const training_set_pos_num = ref(null); cons
 const dev_set_num = ref(null); const dev_set_pos_num = ref(null); const dev_set_neg_num = ref(null)
 const test_set_num = ref(null); const test_set_pos_num = ref(null); const test_set_neg_num = ref(null)
 const train =ref(null);const dev = ref(null);const test = ref(null)
+const loading = ref(true)
 const getDatasetDetails = (datasetName)=>{
   axios({
     method: 'post',
@@ -330,16 +336,28 @@ const getDatasetDetails = (datasetName)=>{
       }
       changeOptionData(2,[train.value,dev.value,test.value])
       changeOptionData(1,[    
-      [training_set_pos_num.value,dev_set_pos_num.value,test_set_pos_num.value],
-      [training_set_neg_num.value,dev_set_neg_num.value,test_set_neg_num.value],
-      [training_set_num.value,dev_set_num.value,test_set_num.value]
-    ])
+        [training_set_num.value,training_set_neg_num.value,training_set_pos_num.value],
+        [dev_set_num.value,dev_set_neg_num.value,dev_set_pos_num.value],
+        [test_set_num.value,test_set_neg_num.value,test_set_pos_num.value]
+      ])
+      var newData = [[training_set_num.value,training_set_neg_num.value,training_set_pos_num.value],
+                     [dev_set_num.value,dev_set_neg_num.value,dev_set_pos_num.value],
+                     [test_set_num.value,test_set_neg_num.value,test_set_pos_num.value]]
+      if(newData.toString() === [[0,0,0],[0,0,0],[0,0,0]].toString()){
+        getDatasetDetails(dataset.datasetName)
+      }else{
+        loading.value = false
+      }
     }
   })
 }
 getDatasetDetails(dataset.datasetName)
 const changePage =inject('changePage')
 
+watch(()=> dataset.datasetName,(newValue,oldValue)=>{
+  console.log('yes');
+  getDatasetDetails(dataset.datasetName)
+})
 
 defineExpose({
   changeOptionData,
@@ -356,6 +374,7 @@ defineExpose({
 }
 body {
   text-align: center;
+  vertical-align: middle;
 }
 .ant-layout-content{
   padding:0 !important;
