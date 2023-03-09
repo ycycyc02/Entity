@@ -1,6 +1,6 @@
 <template>
   <!-- 主页面 -->
-  <a-layout style="{min-height:100vh}">
+  <a-layout style="min-height:100vh">
     <!-- 侧边栏部分 -->
     <a-layout-sider v-model:collapsed="collapsed" collapsible :trigger="null" style="box-shadow: 2px 0 6px rgba(0,21,41,.35);" >
       <div class="logo" style="margin: 10px;">
@@ -79,7 +79,7 @@
       </a-layout-header>
       <!-- content部分 -->
           <router-view></router-view>
-      <a-layout-footer style="text-align: center">
+      <a-layout-footer style="text-align: center" ref="footer">
         Ant Design ©2018 Created by Ant UED
       </a-layout-footer>
     </a-layout>
@@ -87,7 +87,7 @@
 </template>
 <script>
 import { PieChartOutlined, DesktopOutlined, UserOutlined, FileOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
-import { defineComponent, ref, provide } from 'vue'
+import { defineComponent, ref, provide ,onMounted} from 'vue'
 import { useRouter } from 'vue-router'
 import picture from '../assets/logo.svg';
 
@@ -112,6 +112,15 @@ export default defineComponent({
 
     const modelName = ref('')
     provide('modelName', modelName)
+
+    // const windowsHeight = ref('')
+    // const footer = ref(null)
+    // onMounted(()=>{
+    //   //可视区域高度
+    //   windowsHeight.value = `${document.documentElement.clientHeight}`;
+    //   console.log('allHeight:',windowsHeight.value);
+    //   console.log('allHeight:', footer.value.$el.clientHeight);
+    // })
 
     return {
       collapsed: ref(false),
