@@ -20,7 +20,7 @@
           </a-steps>
         </div> -->
       </a-layout-header>
-        <div :style="{width:'60%', padding: '24px', background: '#fff', minHeight: '540px',float:'left'}">
+        <div :style="{width:'55%', padding: '24px', background: '#fff', minHeight: '540px',float:'left'}">
 
             <a-form
                 :model="formState"
@@ -44,6 +44,20 @@
                     name="entity_to_annotate"
                 >
                     <a-input v-model:value="formState.entity_to_annotate"/>
+                </a-form-item>
+
+                <a-form-item
+                  label="选择链接知识库"
+                  name="知识库名称"
+                >
+                  <a-select
+                    v-model:value="formState.kbBaseName"
+                    show-search
+                    :loading="loading"
+                    placeholder="请选择知识库"
+                    :options="options"
+                    :filter-option="filterOption"
+                  ></a-select>
                 </a-form-item>
 
                 <a-form-item
@@ -82,17 +96,18 @@
                 </a-form-item>
             </a-form>
         </div>
-        <div :style="{width:'40%', padding: '24px', background: '#fff', minHeight: '500px',float:'right'}">
+        <div :style="{width:'45%', padding: '24px', background: '#fff', minHeight: '500px',float:'right'}">
             <!-- {{content}} -->
             <a-table
                 :columns="columns1"
                 :data-source="dataSource1"
                 class="components-table-demo-nested"
+                :loading="tableloading"
             >
                 <template #expandedRowRender="{ record }">
                     <a-table
                     :columns="innerColumns1"
-                    :data-source="[{name:'entity_id',value:record.entity_id},{name:'type',value:record.type}]"
+                    :data-source="[{name:'id',value:record.subject_id},{name:'alias',value:record.alias},{name:'type',value:record.type}]"
                     :showHeader="false"
                     :pagination="false"
                     size="small"
@@ -124,6 +139,7 @@
 <script>
 import { defineComponent, reactive, inject, ref } from 'vue'
 import axios from 'axios'
+import { message } from 'ant-design-vue'
 
 export default defineComponent({
   components: {
@@ -154,9 +170,9 @@ export default defineComponent({
     const columns1 = [
       {
         title: 'entity',
-        dataIndex: 'entity',
-        key: 'entity'
-      }
+        dataIndex: 'subject',
+        key: 'subject'
+      },      
     ]
     const dataSource1 = ref([])
 
@@ -164,7 +180,8 @@ export default defineComponent({
       {
         title: 'predicate',
         dataIndex: 'predicate',
-        key: 'predicate'
+        key: 'predicate',
+        width:'50%',
       },
       {
         title: 'object',
@@ -177,7 +194,8 @@ export default defineComponent({
       {
         title: 'name',
         dataIndex: 'name',
-        key: 'name'
+        key: 'name',
+        width:'15%',
       },
       {
         title: 'value',
@@ -187,24 +205,33 @@ export default defineComponent({
     ]
     const innerData1 = ref([])
     const data = ref()
+    const tableloading = ref(false)
     const onSearch = (value) => {
+      tableloading.value = true
       axios({
         method: 'post',
-        url: 'http://172.20.137.106:33004/test/searchKnowledgeBaseByAlias',
+        url: 'http://172.20.137.106:33004/test/searchKnowledgeBaseByName',
         data: {
-          user_input: value,
-          knowledgeBaseName: 'script_kb'
+          entityName: value,
+          knowledgeBaseName: formState.kbBaseName
         }
       }).then(res => {
-        // content.value = res.data.data
-        data.value = res.data.data
-        let i = 0
-        for (i = 0; i < data.value.length; i++) {
-          data.value[i].key = i
-          //   data.value[i].entity_id="["+data.value[i].entity_id+"]"
-          data.value[i].type = '[' + data.value[i].type + ']'
+        if(res.data.error_code === 200){
+          // content.value = res.data.data
+          data.value = res.data.data
+          let i = 0
+          for (i = 0; i < data.value.length; i++) {
+            data.value[i].key = i
+            data.value[i].alias="["+data.value[i].alias+"]"
+            data.value[i].type = '[' + data.value[i].type + ']'
+            // data.value[i].subject = data.value[i].subject + ' '+ data.value[i].subject_id
+          }
+          dataSource1.value = data.value
+          tableloading.value =false
         }
-        dataSource1.value = data.value
+        else{
+          message.error('发生了一些错误，请检查输入是否正确！')
+        }
       })
     }
     const onFinish = value => {
@@ -231,6 +258,29 @@ export default defineComponent({
       percent.value = (i) / length * 100
     }
 
+    // 知识库选择
+    const loading = ref(true)
+    const options = ref([])
+    const filterOption = (input, option) => {
+      return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    }; 
+    const setData = () => {
+      axios('http://172.20.137.106:33004/test/getAllKnowledgeBases')
+      .then(value=>{
+        var temp = []
+        temp=value.data.data.name_list;
+        let i=0;
+        formState.kbBaseName = temp[i][0];
+        for(i=0;i<temp.length;i++){
+          console.log(temp[0]);
+          options.value.push({value:temp[i][0],label:temp[i][0]})
+        }
+        loading.value = false
+      })
+    }
+    setData()
+
+
     return {
       formState,
       onSearch,
@@ -239,11 +289,16 @@ export default defineComponent({
       innerColumns,
       innerData1,
       innerColumns1,
+      tableloading,
       content,
       i,
       length,
       onFinish,
-      percent
+      percent,
+      options,
+      loading,
+      filterOption,
+      setData,
     }
   }
 })

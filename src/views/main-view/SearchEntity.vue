@@ -11,11 +11,12 @@
       :columns="columns1"
       :data-source="dataSource1"
       class="components-table-demo-nested"
+      :loading = 'tableloading'
     >
       <template #expandedRowRender="{ record }">
         <a-table
           :columns="innerColumns1"
-          :data-source="[{name:'alias',value:record.alias},{name:'type',value:record.type}]"
+          :data-source="[{name:'id',value:record.subject_id},{name:'alias',value:record.alias},{name:'type',value:record.type}]"
           :showHeader="false"
           :pagination="false"
           size="small"
@@ -62,7 +63,8 @@ const innerColumns = [
   {
     title: 'predicate',
     dataIndex: 'predicate',
-    key: 'predicate'
+    key: 'predicate',
+    width:'30%',
   },
   {
     title: 'object',
@@ -75,7 +77,8 @@ const innerColumns1 = [
   {
     title: 'name',
     dataIndex: 'name',
-    key: 'name'
+    key: 'name',
+    width:'30%',
   },
   {
     title: 'value',
@@ -85,6 +88,7 @@ const innerColumns1 = [
 ]
 const innerData1 = ref([])
 const data = ref()
+const tableloading = ref(false)
 
 
 export default defineComponent({
@@ -97,6 +101,7 @@ export default defineComponent({
     const dataset = useDatasetStore()
 
     const onSearch = (searchValue) => {
+      tableloading.value =true
       axios({
         method: 'post',
         url: 'http://172.20.137.106:33004/test/searchKnowledgeBaseByName',
@@ -114,6 +119,7 @@ export default defineComponent({
         }
         dataSource1.value = data.value
         console.log(data.value)
+        tableloading.value =false
       })
     }
 
@@ -123,7 +129,8 @@ export default defineComponent({
       onSearch,
       innerColumns,
       innerData1,
-      innerColumns1
+      innerColumns1,
+      tableloading
     }
   }
 })

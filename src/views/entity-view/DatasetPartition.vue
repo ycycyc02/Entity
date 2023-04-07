@@ -89,7 +89,7 @@
 
     <a-form-item 
       name="randomShuffle" 
-      label="采样方式" 
+      label="随机采样" 
       :rules="[{ required: true, message: '请选择采样方式!' }]"
     >
       <a-radio-group v-model:value="formState.randomShuffle" style="text-align:left;">
